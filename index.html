@@ -839,8 +839,20 @@ function vProtect(){
 }
 
 /* ---------------- ops / investor ---------------- */
-let M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, perT:9, premium:3, dispute:3, adjCost:220};
+let M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, pA1:5, pA2:20, pA3:50, pTpa:300, pPrice:2.5, pSetup:100, pOther:30, pPerT:3, perT:9, premium:3, dispute:3, adjCost:220};
 const EMP_PRSI = 0.1125; // approximate employer PRSI rate; verify current rate
+function phase1Rows(){
+  // Phase 1: software only, agents keep deposits in their own client accounts
+  const ends = [M.pA1, M.pA2, M.pA3]; let prev = 0, cum = 0;
+  return ends.map((a, i) => {
+    const avgAgents = (prev + a) / 2; prev = a;
+    const ten = avgAgents * M.pTpa;
+    const rev = ten * M.pPrice * 12;
+    const cost = (i === 0 ? M.pSetup * 1000 : 0) + M.founder * (1 + EMP_PRSI) + M.pOther * 1000 + ten * M.pPerT;
+    const ebitda = rev - cost; cum += ebitda;
+    return {y: i + 1, agents: a, ten, rev, cost, ebitda, cum};
+  });
+}
 function modelYears(){
   const ramp = [.12,.35,.6,.82,1];
   return ramp.map((r, i) => {
@@ -864,6 +876,38 @@ function chartSvg(rows){
   return `<div style="overflow-x:auto"><svg class="chart" viewBox="0 0 ${W2} ${H}" style="width:100%;min-width:420px;height:auto" role="img" aria-label="Revenue versus costs by year">${g}${bars}</svg></div>
   <div class="legend"><span><i style="background:var(--brand)"></i>Revenue (interest + Agent Pro)</span><span><i style="background:var(--brass)"></i>Operating costs</span></div>`;
 }
+function phase1Card(rng){
+  const rows = phase1Rows(), y3 = rows[2];
+  const peak = Math.min(0, ...rows.map(r => r.cum));
+  const profitYear = (rows.find(r => r.ebitda >= 0) || {}).y;
+  const big = v => `<div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700">${v}</div>`;
+  const runRate = M.pA3 * M.pTpa * M.pPrice * 12;
+  return `<div class="two">
+    <div class="card stack" style="min-width:0"><div class="row between"><h3>Phase 1 · software-only pilot</h3><span class="pill p-ok">No money held</span></div>
+      <p class="small muted">Agents keep deposits in their own client accounts. MyDeposit.ie charges per tenancy for certificates, checks, evidence and the repayment and dispute workflow.</p>
+      <div class="grid4" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+        <div><span class="small muted">Agents, end Y3</span>${big(M.pA3)}</div>
+        <div><span class="small muted">Tenancies, end Y3</span>${big(Math.round(M.pA3 * M.pTpa).toLocaleString('en-IE'))}</div>
+        <div><span class="small muted">Revenue run-rate, end Y3</span>${big(eurM(runRate) + '/yr')}</div>
+        <div><span class="small muted">Peak funding need</span>${big(eurM(-peak))}</div>
+      </div>
+      <div class="callout info">${profitYear ? `<b>Operating profit from year ${profitYear}.</b>` : '<b>Not profitable within three years</b> at these settings.'} Cumulative cash at end of year 3: ${eurM(y3.cum)}.</div>
+      <div class="tbl-wrap"><table><thead><tr><th>Year</th><th class="r">Agents (end)</th><th class="r">Tenancies (avg)</th><th class="r">Revenue</th><th class="r">Costs</th><th class="r">EBITDA</th><th class="r">Cumulative cash</th></tr></thead><tbody>
+        ${rows.map(r => `<tr><td>Y${r.y}</td><td class="r num">${r.agents}</td><td class="r num">${Math.round(r.ten).toLocaleString('en-IE')}</td><td class="r num">${eurM(r.rev)}</td><td class="r num">${eurM(r.cost)}</td><td class="r num" style="color:${r.ebitda>=0?'var(--ok)':'var(--bad)'}">${eurM(r.ebitda)}</td><td class="r num" style="color:${r.cum>=0?'var(--ok)':'var(--bad)'}">${eurM(r.cum)}</td></tr>`).join('')}
+      </tbody></table></div></div>
+    <div class="card stack"><h3>Phase 1 assumptions</h3>
+      <div class="row"><button class="btn btn-s btn-sm" data-act="p-preset" data-p="boot">Bootstrap: no salary, no-code</button><button class="btn btn-g btn-sm" data-act="p-preset" data-p="funded">Funded pilot</button></div>
+      ${rng('pA1','Agents signed by end of year 1',1,40,1,v=>v)}
+      ${rng('pA2','Agents by end of year 2',1,100,1,v=>v)}
+      ${rng('pA3','Agents by end of year 3',1,200,1,v=>v)}
+      ${rng('pTpa','Tenancies per agent',50,1000,10,v=>v)}
+      ${rng('pPrice','Price per tenancy per month',0.5,8,0.25,v=>eur(v))}
+      ${rng('pSetup','One-off MVP setup (€k, year 1)',0,250,1,v=>'€'+v+'k')}
+      ${rng('pOther','Other running costs (€k / year)',0,150,1,v=>'€'+v+'k')}
+      ${rng('pPerT','Hosting and support per tenancy / year',0,15,0.5,v=>eur(v))}
+      <p class="small muted">Founder salary (set below) is included every year. Agent numbers are averaged across each year. All figures are assumptions to test in the pilot.</p></div>
+  </div>`;
+}
 function vOps(){
   tick('ops');
   const all = S.deposits, live = all.filter(d => !['awaiting_payment','repaid'].includes(d.status));
@@ -881,6 +925,7 @@ function vOps(){
       <div class="kpi"><span>Open disputes</span><b>${cnt('disputed')+cnt('adjudication')}</b><small>${cnt('adjudication')} with adjudicator</small></div>
       <div class="kpi"><span>Awaiting funds</span><b>${cnt('awaiting_payment')}</b><small>registered, not yet paid</small></div>
     </div>
+    ${phase1Card(rng)}
     <div class="two">
       <div class="card stack" style="min-width:0"><div class="row between"><h3>Full custodial scheme (phase 2) · Year 5</h3><span class="pill p-brass">Assumptions</span></div>
         <div class="grid4" style="grid-template-columns:repeat(4,minmax(0,1fr))">
@@ -1044,7 +1089,7 @@ const ACT = {
   'tour-go': b => { const s = TOUR[+b.dataset.i]; closeModal(); if (s.k === 'protect') wizardInit(); if (s.k === 'check') { checkQ = null; }
     if (s.u) signInAs(s.u, s.go); else { S.session = null; save(); navTo(s.go); } },
   'reset': () => openModal('Reset demo data?', `<p>This restores the original demo deposits and signs you out. Anything you created in this browser is removed.</p><div class="row" style="margin-top:16px"><button class="btn btn-danger" data-act="reset-yes">Reset demo</button><button class="btn btn-g" data-act="close-modal">Cancel</button></div>`),
-  'reset-yes': () => { S = seed(); W = null; M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, perT:9, premium:3, dispute:3, adjCost:220}; save(); closeModal(); toast('Demo reset'); navTo('home'); },
+  'reset-yes': () => { S = seed(); W = null; M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, pA1:5, pA2:20, pA3:50, pTpa:300, pPrice:2.5, pSetup:100, pOther:30, pPerT:3, perT:9, premium:3, dispute:3, adjCost:220}; save(); closeModal(); toast('Demo reset'); navTo('home'); },
   'open': b => navTo('deposit-' + b.dataset.id),
   'cert': b => showCert(dep(b.dataset.id)),
   'resend': b => { const d = dep(b.dataset.id); notify(tenantEmails(d), `Your Deposit Protection Certificate · ${d.dpc}`, d.id); log(d, 'Certificate re-sent to tenants'); save(); toast('Certificate re-sent to ' + d.tenants.length + ' tenant(s)'); },
@@ -1079,7 +1124,14 @@ A94 F3R7,"8 Newtown Ave, Blackrock, Co. Dublin",2026-12-15,2600,2600,Grace Okafo
     const rows = [['D07 P8X2','Apt 4, Smithfield Sq, Dublin 7','2026-12-01',2050,'Aisling Roche','aisling.r@example.com'],['D09 K2T6','22 Iona Road, Glasnevin, Dublin 9','2026-12-01',2300,'Marek Nowak','marek.n@example.com'],['A94 F3R7','8 Newtown Ave, Blackrock, Co. Dublin','2026-12-15',2600,'Grace Okafor','grace.o@example.com']];
     rows.forEach(r => { S.deposits.unshift({id:'d'+Date.now()+Math.floor(Math.random()*1000), dpc:nextDpc(), ownerId:me().id, address:r[1], eircode:r[0], county:'Dublin', rtb:'Pending', start:r[2], end:null, rent:r[3], amount:r[3], tenants:[{name:r[4], email:r[5], uid:null, lead:true}], status:'awaiting_payment', created:nowIso(), timeline:[{at:nowIso(), text:'Imported from CSV. Awaiting deposit funds.'}]}); });
     tick('agent'); save(); closeModal(); toast('3 tenancies imported. Pay them in one payment.'); render(); },
-  'm-reset': () => { M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, perT:9, premium:3, dispute:3, adjCost:220}; render(); }
+  'p-preset': b => {
+    Object.assign(M, b.dataset.p === 'boot'
+      ? {founder:0, pSetup:10, pOther:6, pPerT:1, pA1:3, pA2:10, pA3:25, pTpa:300, pPrice:2.5}
+      : {founder:80000, pSetup:100, pOther:30, pPerT:3, pA1:5, pA2:20, pA3:50, pTpa:300, pPrice:2.5});
+    const y = window.scrollY; render(); window.scrollTo(0, y);
+    toast(b.dataset.p === 'boot' ? 'Bootstrap preset: founder unpaid, no-code build' : 'Funded pilot preset');
+  },
+  'm-reset': () => { M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, pA1:5, pA2:20, pA3:50, pTpa:300, pPrice:2.5, pSetup:100, pOther:30, pPerT:3, perT:9, premium:3, dispute:3, adjCost:220}; render(); }
 };
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-act]');
