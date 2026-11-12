@@ -64,11 +64,11 @@ a{color:var(--brand)}
 .nav a{padding:8px 12px;border-radius:999px;text-decoration:none;color:var(--muted);font-weight:500;font-size:.92rem}
 .nav a:hover,.nav a.on{color:var(--ink);background:var(--surface-2)}
 .acct{display:flex;gap:8px;align-items:center}
-.menu-btn{display:none}
+.top .menu-btn{display:none}
 @media (max-width:1140px){
   .nav{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--surface);border-bottom:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-left,0px)) 16px}
   .nav.open{display:flex}
-  .menu-btn{display:inline-flex;margin-left:auto}
+  .top .menu-btn{display:inline-flex;margin-left:auto}
   .acct .who{display:none}
 }
 .nav .nav-acct{display:none}
