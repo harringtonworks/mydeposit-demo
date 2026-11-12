@@ -1,0 +1,1189 @@
+<!doctype html>
+<html lang="en-IE">
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MyDeposit.ie Deposit Protection</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky header, a dark "vault" hero band, content sections on a soft green-grey ground; signed-in views use a two-column record + action layout */
+:root{
+  --bg:#F1F4F2; --surface:#FFFFFF; --surface-2:#E7EDEA; --ink:#0F1F1D; --muted:#566966; --line:#D3DDD9;
+  --brand:#0C6A59; --brand-ink:#FFFFFF; --brand-soft:#DCEEE8; --brass:#94691A; --brass-soft:#F3E9D2;
+  --ok:#1D7A4C; --warn:#A35F00; --bad:#B0281F; --info:#22599A;
+  --vault:#0A2624; --vault-2:#0F3A35; --vault-ink:#E8F2EF; --vault-muted:#A3C2BB; --vault-line:rgba(232,242,239,.16); --glow:#43D1AE; --gold:#E2BC69;
+  --shadow:0 1px 2px rgba(15,31,29,.06),0 12px 32px -14px rgba(15,31,29,.22);
+  --f-display:"Bricolage Grotesque","Space Grotesk",system-ui,sans-serif;
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --r:14px; --r-sm:9px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#091312; --surface:#101D1C; --surface-2:#162826; --ink:#E3EDEA; --muted:#93A8A3; --line:#233C38;
+  --brand:#3DC2A3; --brand-ink:#03201A; --brand-soft:#11362F; --brass:#DDB560; --brass-soft:#2D2513;
+  --ok:#4CC38A; --warn:#E5A43C; --bad:#F2766D; --info:#7CAAE6;
+  --vault:#061110; --vault-2:#0B2522; --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -14px rgba(0,0,0,.6); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#091312; --surface:#101D1C; --surface-2:#162826; --ink:#E3EDEA; --muted:#93A8A3; --line:#233C38;
+  --brand:#3DC2A3; --brand-ink:#03201A; --brand-soft:#11362F; --brass:#DDB560; --brass-soft:#2D2513;
+  --ok:#4CC38A; --warn:#E5A43C; --bad:#F2766D; --info:#7CAAE6;
+  --vault:#061110; --vault-2:#0B2522; --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -14px rgba(0,0,0,.6); color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.nav a{white-space:nowrap}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--surface)}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,5vw,3.6rem);font-weight:800}
+h2{font-size:clamp(1.55rem,3vw,2.2rem);font-weight:700}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+a{color:var(--brand)}
+.mono{font-family:var(--f-mono);font-size:.92em}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.eyebrow{font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--brass)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:20px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.25rem;letter-spacing:-.02em;flex-shrink:0}
+.logo small{display:block;font-family:var(--f-body);font-weight:500;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.logo svg{width:34px;height:34px}
+.nav{display:flex;gap:4px;margin-left:auto}
+.nav a{padding:8px 12px;border-radius:999px;text-decoration:none;color:var(--muted);font-weight:500;font-size:.92rem}
+.nav a:hover,.nav a.on{color:var(--ink);background:var(--surface-2)}
+.acct{display:flex;gap:8px;align-items:center}
+.menu-btn{display:none}
+@media (max-width:1140px){
+  .nav{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--surface);border-bottom:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-left,0px)) 16px}
+  .nav.open{display:flex}
+  .menu-btn{display:inline-flex;margin-left:auto}
+  .acct .who{display:none}
+}
+.nav .nav-acct{display:none}
+@media (max-width:640px){
+  .acct{display:none}
+  .nav .nav-acct{display:block;color:var(--brand);font-weight:600}
+  .demobar .who-d{display:none}
+}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:10px 18px;font:600 .92rem var(--f-body);cursor:pointer;text-decoration:none;transition:transform .12s ease,background .15s ease;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-p{background:var(--brand);color:var(--brand-ink)}
+.btn-p:hover{background:color-mix(in srgb,var(--brand) 86%,var(--ink))}
+.btn-s{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn-s:hover{background:var(--surface-2)}
+.btn-g{background:transparent;color:var(--ink)}
+.btn-g:hover{background:var(--surface-2)}
+.btn-danger{background:transparent;color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,transparent)}
+.btn-gold{background:var(--gold);color:#1B1405}
+.btn-ghost-v{background:transparent;color:var(--vault-ink);border-color:var(--vault-line)}
+.btn-ghost-v:hover{background:rgba(255,255,255,.06)}
+.btn-sm{padding:6px 12px;font-size:.84rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* hero */
+.vault{background:radial-gradient(1200px 500px at 85% -10%,var(--vault-2),transparent 60%),var(--vault);color:var(--vault-ink);position:relative;overflow:hidden}
+.vault::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--vault-line) 1px,transparent 1px),linear-gradient(90deg,var(--vault-line) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,rgba(0,0,0,.35),transparent 80%);pointer-events:none}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-block:72px 80px;position:relative;z-index:1}
+.hero .eyebrow{color:var(--gold)}
+.hero h1{margin:14px 0 18px}
+.hero h1 em{font-style:normal;color:var(--glow)}
+.hero p.lead{font-size:1.12rem;color:var(--vault-muted);max-width:56ch}
+.hero .row{margin-top:28px}
+.trust{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:34px;font-size:.84rem;color:var(--vault-muted)}
+.trust span{display:inline-flex;align-items:center;gap:7px}
+.trust i{width:7px;height:7px;border-radius:50%;background:var(--glow);box-shadow:0 0 0 4px rgba(67,209,174,.15)}
+.dial{position:relative;aspect-ratio:1;max-width:420px;width:100%;margin-left:auto}
+.dial svg{width:100%;height:100%}
+.dial .ring{transform-origin:200px 200px;animation:spin 60s linear infinite}
+.dial .ring2{transform-origin:200px 200px;animation:spin 90s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.dial .ring,.dial .ring2{animation:none}}
+.float{position:absolute;background:rgba(10,38,36,.78);border:1px solid var(--vault-line);backdrop-filter:blur(10px);border-radius:12px;padding:12px 14px;font-size:.8rem;color:var(--vault-muted);box-shadow:0 20px 40px -20px rgba(0,0,0,.6)}
+.float b{display:block;color:var(--vault-ink);font-family:var(--f-display);font-size:1.25rem}
+.float .mono{color:var(--gold)}
+.f1{left:-6%;bottom:12%}
+.f2{right:-4%;top:8%}
+@media (max-width:880px){.hero{grid-template-columns:1fr;padding-block:48px 56px}.dial{max-width:300px;margin:0 auto}.f1{left:0}.f2{right:0}}
+
+/* sections */
+section.band{padding-block:72px}
+.band-alt{background:var(--surface);border-block:1px solid var(--line)}
+.sec-head{display:flex;flex-direction:column;gap:10px;max-width:680px;margin-bottom:36px}
+.sec-head p{color:var(--muted);font-size:1.04rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:900px){.grid3,.grid4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.grid3,.grid2,.grid4{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;min-width:0}
+.card.raised{box-shadow:var(--shadow)}
+.step{display:flex;flex-direction:column;gap:10px}
+.step .n{font-family:var(--f-mono);font-size:.8rem;color:var(--brass);font-weight:600}
+.step p{color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.facts div{padding:22px;border-right:1px solid var(--line)}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font-family:var(--f-display);font-size:2rem;color:var(--brand);line-height:1}
+.facts span{display:block;margin-top:8px;color:var(--muted);font-size:.9rem}
+@media (max-width:820px){.facts{grid-template-columns:1fr 1fr}.facts div:nth-child(2){border-right:0}.facts div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+.aud{display:flex;flex-direction:column;gap:12px}
+.aud ul{margin:0;padding-left:18px;color:var(--muted)}
+.aud ul li{margin:4px 0}
+.ticks{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.ticks li{display:flex;gap:10px;align-items:flex-start}
+.ticks li::before{content:"";flex:0 0 18px;height:18px;margin-top:2px;border-radius:50%;background:var(--brand-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.5l2.6 2.5L13 6.5' fill='none' stroke='%230C6A59' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat}
+details.faq{border-bottom:1px solid var(--line);padding:16px 0}
+details.faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.faq summary::after{content:"+";color:var(--brass);font-size:1.3rem;line-height:1}
+details.faq[open] summary::after{content:"–"}
+details.faq p{margin-top:10px;color:var(--muted);max-width:72ch}
+.callout{border-radius:var(--r);padding:16px 18px;background:var(--brass-soft);color:var(--ink);font-size:.92rem;border:1px solid color-mix(in srgb,var(--brass) 30%,transparent)}
+.callout.info{background:var(--brand-soft);border-color:color-mix(in srgb,var(--brand) 30%,transparent)}
+.timeline-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.timeline-flow>div{padding:18px 18px 0 0;border-top:2px solid var(--line);position:relative}
+.timeline-flow>div::before{content:"";position:absolute;top:-7px;left:0;width:12px;height:12px;border-radius:50%;background:var(--brand)}
+.timeline-flow b{display:block;font-family:var(--f-mono);font-size:.78rem;color:var(--brass);margin-bottom:4px}
+.timeline-flow p{color:var(--muted);font-size:.9rem;margin-top:6px}
+@media (max-width:760px){.timeline-flow{grid-template-columns:1fr 1fr;row-gap:24px}}
+
+/* page header for inner pages */
+.phead{padding-block:40px 28px;border-bottom:1px solid var(--line);background:var(--surface)}
+.phead p{color:var(--muted);margin-top:10px;max-width:70ch}
+.crumbs{font-size:.84rem;color:var(--muted);margin-bottom:10px}
+.crumbs a{color:var(--muted)}
+main{min-height:60vh}
+.page{padding-block:32px 72px}
+
+/* forms */
+label.f{display:flex;flex-direction:column;gap:6px;font-size:.86rem;font-weight:600;color:var(--ink);min-width:0}
+label.f .hint{font-weight:400;color:var(--muted);font-size:.8rem}
+input,select,textarea{font:inherit;font-size:.95rem;padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%;min-width:0}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--brand);outline-offset:0;border-color:transparent}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fgrid .full{grid-column:1/-1}
+@media (max-width:620px){.fgrid{grid-template-columns:1fr}}
+.err{color:var(--bad);font-size:.84rem;font-weight:500}
+.ded{display:grid;grid-template-columns:150px 110px 1fr;gap:8px}
+@media (max-width:620px){.ded{grid-template-columns:1fr 1fr}.ded input:last-child{grid-column:1/-1}}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:.76rem;font-weight:600;white-space:nowrap;border:1px solid transparent}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.p-ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.p-warn{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.p-bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.p-info{color:var(--info);background:color-mix(in srgb,var(--info) 13%,transparent)}
+.p-brass{color:var(--brass);background:color-mix(in srgb,var(--brass) 15%,transparent)}
+.p-muted{color:var(--muted);background:var(--surface-2)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover td{background:var(--surface-2)}
+td.r,th.r{text-align:right}
+
+/* dashboard */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.kpi span{font-size:.78rem;color:var(--muted);font-weight:500}
+.kpi b{display:block;font-family:var(--f-display);font-size:1.7rem;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi small{color:var(--muted);font-size:.78rem}
+.two{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+.dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 18px;font-size:.92rem}
+.dl dt{color:var(--muted)}
+.dl dd{margin:0;font-weight:500;min-width:0;overflow-wrap:anywhere}
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.tl li{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:.88rem}
+.tl li:last-child{border-bottom:0}
+.tl time{color:var(--muted);font-family:var(--f-mono);font-size:.78rem;padding-top:2px}
+.split{display:flex;height:12px;border-radius:999px;overflow:hidden;background:var(--surface-2)}
+.split i{display:block;height:100%}
+.split .t{background:var(--brand)}
+.split .l{background:var(--brass)}
+.split .h{background:repeating-linear-gradient(45deg,var(--muted) 0 4px,transparent 4px 8px);opacity:.5}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.action-card{position:sticky;top:84px}
+.files{display:flex;flex-direction:column;gap:6px}
+.file{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.84rem;background:var(--bg)}
+.file span:first-child{overflow-wrap:anywhere}
+.persona{display:flex;gap:14px;align-items:center;text-align:left;width:100%;cursor:pointer;font:inherit;color:inherit}
+.persona:hover{border-color:var(--brand)}
+.av{flex:0 0 44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-family:var(--f-display);background:var(--brand-soft);color:var(--brand)}
+.av.b{background:var(--brass-soft);color:var(--brass)}
+.empty{text-align:center;padding:36px;color:var(--muted)}
+.chart text{fill:var(--muted);font-size:11px;font-family:var(--f-body)}
+.chart .bar{fill:var(--brand)}
+.chart .bar2{fill:var(--brass)}
+.chart .grid{stroke:var(--line)}
+.range{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;font-size:.86rem}
+.range input{grid-column:1/-1;padding:0;accent-color:var(--brand);background:transparent;border:0}
+.range output{font-family:var(--f-mono);font-weight:600}
+.wizard-steps{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}
+.wizard-steps span{flex:1 1 120px;padding:10px 12px;border-radius:10px;background:var(--surface-2);font-size:.8rem;color:var(--muted);font-weight:600}
+.wizard-steps span.on{background:var(--brand);color:var(--brand-ink)}
+.wizard-steps span.done{background:var(--brand-soft);color:var(--brand)}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-left,0px));background:rgba(4,14,13,.6);backdrop-filter:blur(4px)}
+.modal-box{background:var(--surface);border-radius:18px;max-width:720px;width:100%;max-height:calc(100vh - 40px);overflow:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);border:1px solid var(--line)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-body{padding:22px}
+.bank{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--bg)}
+.bank-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.spinner{width:22px;height:22px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--brand);animation:spin 0.8s linear infinite}
+
+/* certificate */
+.cert{background:#FBFAF5;color:#16231F;border-radius:6px;padding:34px;position:relative;font-family:var(--f-body);border:1px solid #D9D2BC;box-shadow:inset 0 0 0 8px #FBFAF5,inset 0 0 0 9px #C9B57E}
+.cert h3{font-family:var(--f-display);font-size:1.7rem;color:#0C4F43}
+.cert .ce{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#8B6A1F;font-weight:700}
+.cert .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin:22px 0;font-size:.88rem}
+.cert .cgrid div span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#6B7570}
+.cert .cgrid div b{font-weight:600}
+.cert .foot{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-top:1px solid #E1D9C1;padding-top:16px;font-size:.76rem;color:#55605B}
+.cert .seal{position:absolute;right:28px;top:26px;width:86px;height:86px}
+.cert .qr{width:84px;height:84px;flex:0 0 84px}
+.cert .amt{font-family:var(--f-display);font-size:2.4rem;font-weight:800;color:#0C4F43}
+@media (max-width:560px){.cert{padding:22px}.cert .cgrid{grid-template-columns:1fr}.cert .seal{width:60px;height:60px;right:14px;top:14px}}
+
+/* demo chrome */
+.demobar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;gap:6px;align-items:center;background:var(--vault);color:var(--vault-ink);padding:6px 6px 6px 14px;border-radius:999px;box-shadow:0 18px 40px -12px rgba(0,0,0,.55);font-size:.82rem;max-width:calc(100% - 24px)}
+.demobar .tag{font-family:var(--f-mono);font-size:.7rem;color:var(--gold);letter-spacing:.08em;white-space:nowrap}
+.demobar .btn{padding:7px 12px;font-size:.8rem}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:75;background:var(--surface);border-left:1px solid var(--line);box-shadow:-20px 0 60px -20px rgba(0,0,0,.35);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.drawer-body{padding:16px 20px 90px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.tour{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:12px}
+.tour .ck{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.75rem;font-weight:700;color:var(--muted)}
+.tour.done .ck{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.tour p{font-size:.82rem;color:var(--muted);margin-top:2px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:90;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-size:.9rem;font-weight:500;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);max-width:calc(100% - 32px)}
+.mail{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.84rem;background:var(--bg)}
+.mail b{display:block}
+footer{background:var(--vault);color:var(--vault-muted);padding-block:48px 110px;font-size:.88rem}
+footer h4{color:var(--vault-ink);font-family:var(--f-display);font-size:1rem;margin-bottom:10px}
+footer a{color:var(--vault-muted);text-decoration:none;display:block;padding:3px 0}
+footer a:hover{color:var(--vault-ink)}
+.fgrid4{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+@media (max-width:760px){.fgrid4{grid-template-columns:1fr 1fr}}
+.disclaimer{margin-top:32px;padding-top:18px;border-top:1px solid var(--vault-line);font-size:.78rem}
+</style>
+
+<div id="root"></div>
+<div id="modal" class="modal" hidden><div class="modal-box" role="dialog" aria-modal="true"><div class="modal-head"><h3 id="modal-title"></h3><button class="btn btn-g btn-sm" data-act="close-modal" aria-label="Close">Close</button></div><div class="modal-body" id="modal-body"></div></div></div>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const KEY = 'mydeposit_demo_v4';
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur = n => '€' + Number(n || 0).toLocaleString('en-IE', {minimumFractionDigits: (Math.round(n*100)%100 ? 2 : 0), maximumFractionDigits: 2});
+const eurM = n => n < 0 ? '−' + eurM(-n) : n >= 1e6 ? '€' + (n/1e6).toFixed(n >= 1e8 ? 0 : 1) + 'm' : n >= 1e3 ? '€' + Math.round(n/1e3) + 'k' : eur(n);
+const fdate = iso => iso ? new Date(iso.length === 10 ? iso + 'T12:00:00' : iso).toLocaleDateString('en-IE', {day:'numeric', month:'short', year:'numeric'}) : '—';
+const nowIso = () => new Date().toISOString();
+const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
+const EIRCODE = /^([AC-FHKNPRTV-Y]\d{2}|D6W)\s?[0-9AC-FHKNPRTV-Y]{4}$/i;
+const NET_YIELD = 0.02; // assumed net yield on pooled custodial funds
+
+const STATUS = {
+  awaiting_payment: ['Awaiting funds', 'warn'],
+  protected: ['Protected', 'ok'],
+  repayment_proposed: ['Repayment proposed', 'info'],
+  disputed: ['Dispute · evidence stage', 'bad'],
+  adjudication: ['With adjudicator', 'brass'],
+  repaid: ['Repaid & closed', 'muted']
+};
+const pill = st => `<span class="pill p-${STATUS[st][1]}">${STATUS[st][0]}</span>`;
+
+/* ---------------- seed data ---------------- */
+function seed(){
+  const users = {
+    L1: {id:'L1', role:'landlord', name:'Aoife Byrne', org:'Private landlord · 3 properties', email:'aoife.byrne@example.com'},
+    A1: {id:'A1', role:'agent', name:'Darragh Quinn', org:'Liffey Residential Lettings', email:'lettings@liffey-residential.example.com', licence:'PSRA 002417 (demo)'},
+    T1: {id:'T1', role:'tenant', name:'Ciarán Ó Murchú', org:'Tenant · Cork', email:'ciaran.omurchu@example.com'},
+    T3: {id:'T3', role:'tenant', name:'Tomás Walsh', org:'Tenant · Dublin 8', email:'tomas.walsh@example.com'},
+    J1: {id:'J1', role:'adjudicator', name:'Sinéad Kelly BL', org:'Independent adjudication panel'},
+    OPS:{id:'OPS', role:'admin', name:'Scheme operations', org:'Operations & investor view'}
+  };
+  const t = (name, email, uid, lead) => ({name, email, uid: uid || null, lead: !!lead});
+  const deps = [
+    {id:'d1', dpc:'MDI-25-001184', ownerId:'L1', address:'14 Wellington Road, St Luke\'s, Cork', eircode:'T23 X4P2', county:'Cork', rtb:'RT0000412233', start:'2025-09-01', end:null, rent:1850, amount:1850,
+      tenants:[t('Ciarán Ó Murchú','ciaran.omurchu@example.com','T1',true), t('Priya Nair','priya.nair@example.com')],
+      status:'protected', received:'2025-08-26', protectedAt:'2025-08-26', payRef:'MDI-PAY-88213',
+      timeline:[{at:'2025-08-26T10:12:00Z', text:'Deposit of €1,850 received by instant bank payment'},{at:'2025-08-26T10:12:30Z', text:'Deposit Protection Certificate issued and sent to 2 tenants'}]},
+    {id:'d2', dpc:'MDI-24-000731', ownerId:'L1', address:'Apt 6, Salthill Court, Upper Salthill, Galway', eircode:'H91 E2K7', county:'Galway', rtb:'RT0000377105', start:'2024-07-01', end:'2026-10-31', rent:1600, amount:1600,
+      tenants:[t('Emma Doyle','emma.doyle@example.com',null,true)],
+      status:'repayment_proposed', received:'2024-06-24', protectedAt:'2024-06-24', payRef:'MDI-PAY-61002',
+      proposal:{by:'owner', at:'2026-11-03T09:00:00Z', toTenant:1450, toLandlord:150, items:[{cat:'Cleaning', amount:150, note:'Oven and extractor deep clean. Invoice from SparkleClean Galway attached.'}]},
+      timeline:[{at:'2024-06-24T14:02:00Z', text:'Deposit of €1,600 received by SEPA transfer'},{at:'2024-06-24T14:03:00Z', text:'Certificate issued to Emma Doyle'},{at:'2026-11-03T09:00:00Z', text:'Landlord proposed repayment: €1,450 to tenant, €150 to landlord'}]},
+    {id:'d3', dpc:'MDI-23-000219', ownerId:'L1', address:'3 Mill Lane, Kilkenny', eircode:'R95 F8N3', county:'Kilkenny', rtb:'RT0000290871', start:'2023-02-01', end:'2026-02-28', rent:1350, amount:1350,
+      tenants:[t('Mark Fitzgerald','mark.fitz@example.com',null,true)],
+      status:'repaid', received:'2023-01-20', protectedAt:'2023-01-20', payRef:'MDI-PAY-20011',
+      payout:{toTenant:1350, toLandlord:0, at:'2026-03-04T12:00:00Z', route:'Agreed by both parties'},
+      timeline:[{at:'2023-01-20T09:00:00Z', text:'Deposit of €1,350 received'},{at:'2026-03-02T09:00:00Z', text:'Tenant proposed full return; landlord accepted'},{at:'2026-03-04T12:00:00Z', text:'€1,350 paid to tenant (2 days after agreement)'}]},
+    {id:'d4', dpc:'MDI-23-000604', ownerId:'A1', address:'Apt 21, The Granary, Bonham Street, Dublin 8', eircode:'D08 K7P2', county:'Dublin', rtb:'RT0000318460', start:'2023-10-01', end:'2026-09-30', rent:2250, amount:2250,
+      tenants:[t('Tomás Walsh','tomas.walsh@example.com','T3',true)],
+      status:'adjudication', received:'2023-09-22', protectedAt:'2023-09-22', payRef:'MDI-PAY-30419',
+      proposal:{by:'owner', at:'2026-10-06T09:00:00Z', toTenant:1350, toLandlord:900, items:[
+        {cat:'Damage', amount:600, note:'Engineered oak floor in living room: deep scratches and water staining near balcony door. Repair quote attached.'},
+        {cat:'Cleaning', amount:180, note:'End-of-tenancy clean: kitchen units, bathroom limescale, windows.'},
+        {cat:'Utilities', amount:120, note:'Final bin-service charge paid by landlord.'}]},
+      dispute:{raisedBy:'tenant', at:'2026-10-12T18:20:00Z', held:900, released:1350, tenantAccepts:120,
+        statements:{owner:'Check-in inventory (Oct 2023) records the living-room floor as "good condition, light wear". Check-out report records deep scratches and a 40cm water stain by the balcony door. We claim the repair quote of €600, a professional clean and the final bin charge.',
+                    tenant:'The scratches were there when I moved in; I emailed the agent about them in March 2024 and attached photos. The stain is from a leaking balcony door seal that I reported twice. I cleaned the flat myself before leaving (receipt for supplies attached). I accept the €120 bin charge.'},
+        evidence:{owner:[{n:'check-in-inventory-oct-2023.pdf',s:2.4},{n:'check-out-report-sep-2026.pdf',s:3.1},{n:'floor-repair-quote.pdf',s:0.2},{n:'checkout-photos-12.zip',s:18.6}],
+                  tenant:[{n:'move-in-photos-oct-2023.zip',s:22.3},{n:'email-to-agent-re-floor-mar-2024.pdf',s:0.3},{n:'email-re-balcony-seal-x2.pdf',s:0.4},{n:'cleaning-supplies-receipt.jpg',s:1.1}]},
+        submitted:{owner:true, tenant:true}, sentAt:'2026-10-27T10:00:00Z'},
+      timeline:[{at:'2023-09-22T11:00:00Z', text:'Deposit of €2,250 received by SEPA transfer'},{at:'2026-10-06T09:00:00Z', text:'Agent proposed €900 in deductions'},{at:'2026-10-12T18:20:00Z', text:'Tenant disputed. Undisputed €1,350 released to tenant the same day'},{at:'2026-10-27T10:00:00Z', text:'Case sent to independent adjudicator'}]},
+    {id:'d5', dpc:'MDI-25-001902', ownerId:'A1', address:'Flat 3, 41 Leeson Street Upper, Dublin 4', eircode:'D04 W2N8', county:'Dublin', rtb:'RT0000430012', start:'2025-11-01', end:null, rent:2400, amount:2400, tenants:[t('Hannah Murphy','h.murphy@example.com',null,true), t('Oisín Kearney','oisin.k@example.com')], status:'protected', received:'2025-10-27', protectedAt:'2025-10-27', payRef:'MDI-PAY-90120', timeline:[{at:'2025-10-27T09:00:00Z', text:'Deposit of €2,400 received'}]},
+    {id:'d6', dpc:'MDI-26-002544', ownerId:'A1', address:'12 Quinsborough Road, Bray, Co. Wicklow', eircode:'A98 X2C4', county:'Wicklow', rtb:'RT0000451190', start:'2026-04-01', end:null, rent:2100, amount:2100, tenants:[t('Luis Romero','luis.romero@example.com',null,true)], status:'protected', received:'2026-03-25', protectedAt:'2026-03-25', payRef:'MDI-PAY-91877', timeline:[{at:'2026-03-25T09:00:00Z', text:'Deposit of €2,100 received'}]},
+    {id:'d7', dpc:'MDI-26-002790', ownerId:'A1', address:'Apt 9, Clanbrassil Court, Dublin 6', eircode:'D06 Y5H1', county:'Dublin', rtb:'Pending', start:'2026-11-15', end:null, rent:1950, amount:1950, tenants:[t('Zoe Clarke','zoe.clarke@example.com',null,true)], status:'awaiting_payment', created:'2026-11-10T09:00:00Z', timeline:[{at:'2026-11-10T09:00:00Z', text:'Tenancy registered with MyDeposit.ie. Awaiting deposit funds.'}]},
+    {id:'d8', dpc:'MDI-24-000958', ownerId:'A1', address:'7 Herbert Place, Limerick', eircode:'V94 R6F2', county:'Limerick', rtb:'RT0000366402', start:'2024-09-01', end:'2026-08-31', rent:1500, amount:1500, tenants:[t('Fionn Daly','fionn.daly@example.com',null,true)], status:'repaid', received:'2024-08-20', protectedAt:'2024-08-20', payRef:'MDI-PAY-70411', payout:{toTenant:1420, toLandlord:80, at:'2026-09-06T12:00:00Z', route:'Agreed by both parties'}, timeline:[{at:'2026-09-06T12:00:00Z', text:'€1,420 paid to tenant, €80 to landlord'}]}
+  ];
+  return { v:4, users, deposits:deps, seq:2800, session:null, outbox:[
+    {at:'2026-11-03T09:00:05Z', to:'emma.doyle@example.com', subject:'Your landlord has proposed how to repay your deposit', dep:'d2'},
+    {at:'2026-10-27T10:00:05Z', to:'tomas.walsh@example.com; lettings@liffey-residential.example.com', subject:'Your deposit case is now with an adjudicator', dep:'d4'}
+  ], tour:{}, after:null };
+}
+let S;
+function load(){ try { const r = localStorage.getItem(KEY); if (r) { S = JSON.parse(r); if (S && S.v === 4) return; } } catch(e){} S = seed(); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+load();
+
+const me = () => S.session ? S.users[S.session] : null;
+const dep = id => S.deposits.find(d => d.id === id);
+function partyOf(d, u){
+  if (!u) return null;
+  if (d.ownerId === u.id) return 'owner';
+  if (d.tenants.some(t => t.uid === u.id)) return 'tenant';
+  if (u.role === 'adjudicator') return 'adjudicator';
+  if (u.role === 'admin') return 'admin';
+  return null;
+}
+const ownerName = d => { const o = S.users[d.ownerId]; return o ? (o.role === 'agent' ? o.org : o.name) : 'Landlord'; };
+const tenantNames = d => d.tenants.map(t => t.name).join(', ');
+const tenantEmails = d => d.tenants.map(t => t.email).join('; ');
+function log(d, text){ d.timeline.push({at: nowIso(), text}); }
+function notify(to, subject, depId){ S.outbox.unshift({at: nowIso(), to, subject, dep: depId}); }
+function tick(k){ S.tour[k] = true; }
+function nextDpc(){ S.seq += 1; return 'MDI-26-' + String(S.seq).padStart(6, '0'); }
+
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3200); }
+function openModal(title, html){ $('#modal-title').textContent = title; $('#modal-body').innerHTML = html; $('#modal').hidden = false; }
+function closeModal(){ $('#modal').hidden = true; $('#modal-body').innerHTML = ''; }
+
+/* ---------------- svg bits ---------------- */
+const LOGO = `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3l14 5v10.5C34 28 27.8 34.6 20 37 12.2 34.6 6 28 6 18.5V8z" fill="var(--brand)"/><path d="M20 7.5l10 3.6v7.5c0 7-4.4 12-10 13.9-5.6-1.9-10-6.9-10-13.9v-7.5z" fill="none" stroke="var(--brand-ink)" stroke-opacity=".35"/><circle cx="20" cy="17" r="4" fill="var(--brand-ink)"/><path d="M18.4 19.5h3.2l1 7h-5.2z" fill="var(--brand-ink)"/></svg>`;
+function dialSvg(){
+  let ticks = '';
+  for (let i = 0; i < 72; i++){ const a = i * 5 * Math.PI / 180, r1 = 180, r2 = i % 6 ? 172 : 164; ticks += `<line x1="${200+r1*Math.cos(a)}" y1="${200+r1*Math.sin(a)}" x2="${200+r2*Math.cos(a)}" y2="${200+r2*Math.sin(a)}" stroke="var(--vault-muted)" stroke-opacity="${i%6?.35:.8}" stroke-width="${i%6?1:2}"/>`; }
+  let bolts = '';
+  for (let i = 0; i < 8; i++){ const a = i * 45 * Math.PI / 180; bolts += `<rect x="${200+118*Math.cos(a)-7}" y="${200+118*Math.sin(a)-7}" width="14" height="14" rx="3" fill="var(--vault-2)" stroke="var(--glow)" stroke-opacity=".5"/>`; }
+  return `<svg viewBox="0 0 400 400" aria-hidden="true">
+    <defs><radialGradient id="g1" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#14524a"/><stop offset="1" stop-color="#0a2624"/></radialGradient></defs>
+    <circle cx="200" cy="200" r="196" fill="none" stroke="var(--vault-line)"/>
+    <g class="ring">${ticks}</g>
+    <circle cx="200" cy="200" r="150" fill="url(#g1)" stroke="var(--vault-line)" stroke-width="2"/>
+    <g class="ring2">${bolts}<circle cx="200" cy="200" r="132" fill="none" stroke="var(--glow)" stroke-opacity=".25" stroke-dasharray="2 10"/></g>
+    <circle cx="200" cy="200" r="78" fill="var(--vault)" stroke="var(--gold)" stroke-opacity=".6" stroke-width="2"/>
+    <path d="M200 150l34 12v24c0 22-15 38-34 44-19-6-34-22-34-44v-24z" fill="none" stroke="var(--glow)" stroke-width="3"/>
+    <circle cx="200" cy="190" r="9" fill="var(--gold)"/><path d="M196 196h8l3 18h-14z" fill="var(--gold)"/>
+  </svg>`;
+}
+function qrSvg(seedStr){
+  let h = 2166136261; for (const c of seedStr) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+  const n = 21, cells = [];
+  const rnd = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return (h >>> 0) / 4294967296; };
+  const finder = (x, y) => { for (let i = 0; i < 7; i++) for (let j = 0; j < 7; j++) { const edge = i===0||j===0||i===6||j===6, core = i>=2&&i<=4&&j>=2&&j<=4; if (edge||core) cells.push([x+i,y+j]); } };
+  finder(0,0); finder(14,0); finder(0,14);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const inF = (i<8&&j<8)||(i>12&&j<8)||(i<8&&j>12); if (!inF && rnd() > .52) cells.push([i,j]); }
+  return `<svg class="qr" viewBox="-1 -1 23 23" aria-label="Verification code (demo pattern)"><rect x="-1" y="-1" width="23" height="23" fill="#fff"/>${cells.map(([x,y]) => `<rect x="${x}" y="${y}" width="1" height="1" fill="#0C2A25"/>`).join('')}</svg>`;
+}
+const SEAL = `<svg class="seal" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="#B8974A" stroke-width="2"/><circle cx="50" cy="50" r="38" fill="none" stroke="#B8974A" stroke-dasharray="2 3"/><path d="M50 26l16 6v12c0 11-7 19-16 22-9-3-16-11-16-22V32z" fill="#0C4F43"/><circle cx="50" cy="44" r="4" fill="#E2BC69"/><path d="M48 47h4l1.5 9h-7z" fill="#E2BC69"/><text x="50" y="82" text-anchor="middle" font-size="7" fill="#8B6A1F" font-family="Inter" letter-spacing="1.5">PROTECTED</text></svg>`;
+
+/* ---------------- layout ---------------- */
+const NAV = [['home','How it works'],['landlords','Landlords & agents'],['tenants','Tenants'],['disputes','Disputes'],['security','Security'],['check','Check a deposit']];
+function header(cur){
+  const u = me();
+  const acct = u
+    ? `<span class="who small muted">${esc(u.name)}</span><a class="btn btn-p btn-sm" href="#${u.role==='admin'?'ops':'dashboard'}">Dashboard</a><button class="btn btn-g btn-sm" data-act="signout">Sign out</button>`
+    : `<a class="btn btn-s btn-sm" href="#signin">Sign in</a><a class="btn btn-p btn-sm" href="#protect">Protect a deposit</a>`;
+  return `<header class="top"><div class="wrap top-in">
+    <a class="logo" href="#home">${LOGO}<span>MyDeposit<b style="color:var(--brand)">.ie</b><small>Deposit Protection · Ireland</small></span></a>
+    <nav class="nav" id="nav">${NAV.map(([h,l]) => `<a href="#${h}" class="${cur===h?'on':''}">${l}</a>`).join('')}${u ? `<a class="nav-acct" href="#${u.role==='admin'?'ops':'dashboard'}">My dashboard</a><a class="nav-acct" href="#home" data-act="signout">Sign out</a>` : `<a class="nav-acct" href="#signin">Sign in</a><a class="nav-acct" href="#protect">Protect a deposit</a>`}</nav>
+    <button class="btn btn-s btn-sm menu-btn" data-act="menu" aria-controls="nav">Menu</button>
+    <div class="acct">${acct}</div>
+  </div></header>`;
+}
+function footer(){
+  return `<footer><div class="wrap">
+    <div class="fgrid4">
+      <div><a class="logo" href="#home" style="color:var(--vault-ink)">${LOGO}<span>MyDeposit<b style="color:var(--glow)">.ie</b><small style="color:var(--vault-muted)">Deposit Protection · Ireland</small></span></a>
+        <p style="margin-top:14px;max-width:34ch">An independent, custodial tenancy deposit protection scheme for the Republic of Ireland.</p></div>
+      <div><h4>Landlords & agents</h4><a href="#protect">Protect a deposit</a><a href="#landlords">How protection works</a><a href="#disputes">Repayments</a></div>
+      <div><h4>Tenants</h4><a href="#check">Check my deposit</a><a href="#tenants">Getting it back</a><a href="#disputes">Raise a dispute</a></div>
+      <div><h4>Scheme</h4><a href="#security">How funds are held</a><a href="#ops">Operations view</a><a href="#signin">Sign in</a></div>
+    </div>
+    <p class="disclaimer">Demonstration product for investor review. MyDeposit.ie is not a live scheme, does not hold money and is not affiliated with the Residential Tenancies Board or any existing deposit scheme. All people, properties, Eircodes, IBANs and reference numbers are fictional. Legal references are working assumptions pending legal review.</p>
+  </div></footer>`;
+}
+function demobar(){
+  const u = me();
+  return `<div class="demobar" role="region" aria-label="Demo controls"><span class="tag">DEMO</span>
+    <span class="small who-d" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">${u ? esc(u.name) : 'Public visitor'}</span>
+    <button class="btn btn-gold" data-act="tour">Demo script</button>
+    <button class="btn btn-ghost-v" data-act="switch">Switch user</button>
+    <button class="btn btn-ghost-v" data-act="reset">Reset</button></div>`;
+}
+
+/* ---------------- public pages ---------------- */
+function vHome(){
+  return `
+  <section class="vault"><div class="wrap hero">
+    <div>
+      <span class="eyebrow">Custodial deposit protection · Republic of Ireland</span>
+      <h1>Every deposit, held safe <em>until the tenancy ends.</em></h1>
+      <p class="lead">MyDeposit.ie holds tenancy deposits in a ring-fenced client account. Landlords, letting agents and tenants get one independent place for the money, and a fair, fast way to get it back.</p>
+      <div class="row"><a class="btn btn-gold" href="#protect">Protect a deposit</a><a class="btn btn-ghost-v" href="#check">Check my deposit is protected</a></div>
+      <div class="trust"><span><i></i>Free custodial protection</span><span><i></i>Ring-fenced client account</span><span><i></i>Independent adjudication</span><span><i></i>Data held in the EU</span></div>
+    </div>
+    <div class="dial">${dialSvg()}
+      <div class="float f2"><span class="mono">MDI-25-001184</span><b>${eur(1850)}</b>Protected · Cork T23</div>
+      <div class="float f1">Undisputed amount released<b>Same day</b>when a dispute is raised</div>
+    </div>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <div class="facts">
+      <div><b>€0</b><span>Cost to landlords and tenants for custodial protection</span></div>
+      <div><b>1 month</b><span>Maximum deposit under Irish law, checked on every tenancy</span></div>
+      <div><b>28 days</b><span>To lodge the deposit and give tenants the certificate (scheme rule)</span></div>
+      <div><b>5 days</b><span>Target to pay out once both parties agree</span></div>
+    </div>
+  </div></section>
+
+  <section class="band band-alt" id="how"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">How it works</span><h2>Three stages, from move-in to money back</h2><p>The deposit leaves the landlord's account at the start of the tenancy and sits with MyDeposit.ie until both sides agree how it is repaid, or an adjudicator decides.</p></div>
+    <div class="grid3">
+      <div class="card step"><span class="n">STAGE 1 · MOVE-IN</span><h3>Lodge the deposit</h3><p>The landlord or agent registers the tenancy with its Eircode and pays the deposit to MyDeposit.ie by instant bank payment. Every tenant receives a Deposit Protection Certificate.</p></div>
+      <div class="card step"><span class="n">STAGE 2 · DURING THE TENANCY</span><h3>Held, untouched</h3><p>The money sits in a ring-fenced client account, reconciled daily. Tenants can check their protection at any time with their certificate number or Eircode.</p></div>
+      <div class="card step"><span class="n">STAGE 3 · MOVE-OUT</span><h3>Agree or adjudicate</h3><p>Either side proposes a split. If the other accepts, we pay out. If not, the undisputed part is released at once and an independent adjudicator decides the rest.</p></div>
+    </div>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Who it's for</span><h2>Built for each side of the tenancy</h2></div>
+    <div class="grid3">
+      <div class="card aud"><h3>Landlords</h3><ul><li>Protect a deposit in under three minutes</li><li>No fee for custodial protection</li><li>Evidence-led adjudication if you need to claim</li></ul><a class="btn btn-s btn-sm" href="#landlords" style="align-self:flex-start">For landlords</a></div>
+      <div class="card aud"><h3>Letting agents</h3><ul><li>Bulk upload tenancies by CSV</li><li>One payment for many deposits</li><li>Portfolio dashboard and audit trail</li></ul><a class="btn btn-s btn-sm" href="#landlords" style="align-self:flex-start">For agents</a></div>
+      <div class="card aud"><h3>Tenants</h3><ul><li>Check your deposit is protected</li><li>Propose or respond to a repayment online</li><li>Undisputed money released the same day</li></ul><a class="btn btn-s btn-sm" href="#tenants" style="align-self:flex-start">For tenants</a></div>
+    </div>
+  </div></section>
+
+  <section class="band band-alt"><div class="wrap two">
+    <div class="sec-head" style="margin:0"><span class="eyebrow">Questions</span><h2>What people ask first</h2><p>Short answers. The scheme rules set out the full detail.</p></div>
+    <div>
+      <details class="faq"><summary>Who pays for the scheme?</summary><p>Custodial protection is free. The scheme is funded by interest earned on the pooled deposits it holds, plus optional paid tools for letting agents.</p></details>
+      <details class="faq"><summary>Is my money safe if MyDeposit.ie fails?</summary><p>Deposits are held on trust in a designated client account at a Central Bank of Ireland-authorised credit institution, segregated from MyDeposit.ie's own money, so they are not available to MyDeposit.ie's creditors.</p></details>
+      <details class="faq"><summary>How long does repayment take?</summary><p>We aim to pay within 5 working days of both parties agreeing. If there is a dispute, the part nobody disputes is released straight away.</p></details>
+      <details class="faq"><summary>Can I still go to the RTB?</summary><p>Yes. MyDeposit.ie adjudication is free and optional. Either party can bring a deposit dispute to the Residential Tenancies Board instead.</p></details>
+    </div>
+  </div></section>`;
+}
+function phead(eyebrow, title, sub){ return `<section class="phead"><div class="wrap"><span class="eyebrow">${eyebrow}</span><h1 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-top:8px">${title}</h1>${sub?`<p>${sub}</p>`:''}</div></section>`; }
+function vLandlords(){
+  return phead('Landlords & letting agents', 'Protect a deposit in three minutes', 'Register the tenancy, pay the deposit to MyDeposit.ie, and your tenants get their certificate automatically. Custodial protection costs nothing.') + `
+  <div class="wrap page stack" style="gap:28px">
+    <div class="grid2">
+      <div class="card stack"><h3>What you need</h3><ul class="ticks">
+        <li>The property address and Eircode</li><li>Tenancy start date and monthly rent</li><li>Each tenant's name and email address</li><li>The deposit, which cannot be more than one month's rent</li><li>Your RTB tenancy registration number, or add it later</li></ul></div>
+      <div class="card stack"><h3>Your obligations</h3><ul class="ticks">
+        <li>Lodge the deposit within 28 days of receiving it</li><li>Make sure every tenant has the certificate and scheme information</li><li>Use the online repayment process at the end of the tenancy</li><li>Keep check-in and check-out evidence if you plan to claim</li></ul>
+        <p class="small muted">Timings are proposed scheme rules for this demonstration and are subject to legislation.</p></div>
+    </div>
+    <div class="card stack"><h3>For letting agents</h3><p class="muted">Upload tenancies in bulk, pay many deposits with a single bank payment, and see every deposit across your portfolio with its status and next action. Agent Pro adds API access, branded tenant emails and team permissions.</p>
+      <div class="row"><a class="btn btn-p" href="#protect">Protect a deposit</a><button class="btn btn-s" data-act="as" data-u="A1" data-go="dashboard">Try the agent dashboard</button></div></div>
+  </div>`;
+}
+function vTenants(){
+  return phead('Tenants', 'Your deposit, protected and visible', 'Your landlord or agent must lodge your deposit with a scheme and give you a certificate. You can check it yourself at any time.') + `
+  <div class="wrap page stack" style="gap:28px">
+    <div class="grid3">
+      <div class="card step"><span class="n">AT MOVE-IN</span><h3>Get your certificate</h3><p>You'll get an email from MyDeposit.ie with your Deposit Protection Certificate number. Keep it.</p></div>
+      <div class="card step"><span class="n">ANY TIME</span><h3>Check it</h3><p>Use your certificate number, or the Eircode, your surname and the deposit amount.</p><a class="btn btn-s btn-sm" href="#check" style="align-self:flex-start">Check my deposit</a></div>
+      <div class="card step"><span class="n">AT MOVE-OUT</span><h3>Get it back</h3><p>Propose how it should be repaid, or respond to your landlord's proposal. If you disagree, the undisputed part is paid straight away.</p></div>
+    </div>
+    <div class="callout info"><b>Deposit too high?</b> Since August 2022, a deposit for most tenancies cannot be more than one month's rent. MyDeposit.ie refuses to protect deposits above that limit and tells the landlord why.</div>
+    <div class="row"><button class="btn btn-p" data-act="as" data-u="T1" data-go="dashboard">Sign in as a demo tenant</button></div>
+  </div>`;
+}
+function vDisputes(){
+  return phead('Repayments & disputes', 'A fair process with clear deadlines', 'Most deposits are repaid by agreement. When they are not, an independent adjudicator decides on the evidence, at no cost to either side.') + `
+  <div class="wrap page stack" style="gap:32px">
+    <div class="timeline-flow">
+      <div><b>DAY 0</b><h3>Proposal</h3><p>Landlord or tenant proposes how the deposit is split, with reasons for any deduction.</p></div>
+      <div><b>14 DAYS</b><h3>Response</h3><p>The other side accepts, or disputes. Undisputed money is released the same day.</p></div>
+      <div><b>+14 DAYS</b><h3>Evidence</h3><p>Both upload statements, inventories, photos and invoices.</p></div>
+      <div><b>+28 DAYS</b><h3>Decision</h3><p>An independent adjudicator issues a written, reasoned decision. Funds paid within 5 days.</p></div>
+    </div>
+    <div class="grid2">
+      <div class="card stack"><h3>What the adjudicator looks at</h3><ul class="ticks"><li>Check-in and check-out inventories</li><li>Dated photographs and video</li><li>Invoices, quotes and receipts</li><li>Correspondence during the tenancy</li><li>Fair wear and tear for the length of the tenancy</li></ul></div>
+      <div class="card stack"><h3>Your right to go to the RTB</h3><p class="muted">MyDeposit.ie adjudication is voluntary. Either party can refer a deposit dispute to the Residential Tenancies Board instead of, or after, using our process. When both parties consent to MyDeposit.ie adjudication, they agree to accept the decision.</p><div class="callout small">Whether a private scheme's adjudication can be binding depends on legislation. See the decisions log.</div></div>
+    </div>
+  </div>`;
+}
+function vSecurity(){
+  return phead('Security & safeguarding', 'How your money is kept safe', 'The controls below are the operating model this scheme is designed to run under.') + `
+  <div class="wrap page"><div class="grid2">
+    <div class="card stack"><h3>Ring-fenced funds</h3><ul class="ticks"><li>Held on statutory or express trust for landlords and tenants</li><li>Designated client account at an authorised credit institution</li><li>Never mixed with operating money</li><li>Daily three-way reconciliation of bank, ledger and deposits</li></ul></div>
+    <div class="card stack"><h3>Payments</h3><ul class="ticks"><li>Instant bank payment in, SEPA Instant out</li><li>Payee name checked before every payout (Verification of Payee)</li><li>Payouts need dual approval above set limits</li><li>Strong Customer Authentication at login and payment</li></ul></div>
+    <div class="card stack"><h3>Data protection</h3><ul class="ticks"><li>GDPR and Data Protection Act 2018 compliant by design</li><li>Hosted in EU data centres, encrypted at rest and in transit</li><li>Data Protection Officer and published retention schedule</li><li>Least-privilege staff access with full audit log</li></ul></div>
+    <div class="card stack"><h3>Assurance</h3><ul class="ticks"><li>Annual independent audit of client money</li><li>ISO 27001 and SOC 2 Type II targeted for year one</li><li>Penetration testing before launch and annually</li><li>Business continuity and orderly wind-down plan</li></ul></div>
+  </div></div>`;
+}
+function vCheck(q){
+  const r = q ? lookup(q) : null;
+  let res = '';
+  if (q) {
+    res = r ? `<div class="card raised stack" style="border-color:var(--ok)"><div class="row between"><h3>Deposit found</h3>${pill(r.status)}</div>
+      <dl class="dl"><dt>Certificate</dt><dd class="mono">${r.dpc}</dd><dt>Property</dt><dd>${esc(r.address.split(',').slice(-1)[0].trim())} · ${esc(r.eircode.slice(0,3))} ···</dd><dt>Amount</dt><dd>${eur(r.amount)}</dd><dt>Protected since</dt><dd>${fdate(r.protectedAt)}</dd><dt>Held by</dt><dd>MyDeposit.ie custodial scheme</dd></dl>
+      <p class="small muted">For privacy we show only part of the address. Sign in as a tenant for full details.</p></div>`
+      : `<div class="card stack" style="border-color:var(--bad)"><h3>No protected deposit matches those details</h3><p class="muted">Check the certificate number, or the Eircode, surname and amount. If your landlord has not protected your deposit within 28 days, you can raise it with them, or contact the RTB.</p></div>`;
+  }
+  return phead('Check a deposit', 'Is my deposit protected?', 'Use the certificate number, or the Eircode with your surname and the deposit amount.') + `
+  <div class="wrap page two">
+    <form class="card stack" data-form="check">
+      <label class="f">Certificate number<input id="ck-dpc" name="dpc" placeholder="MDI-25-001184" class="mono" value="${esc(q?.dpc||'')}"></label>
+      <div class="row small muted" style="justify-content:center">or</div>
+      <div class="fgrid">
+        <label class="f">Eircode<input id="ck-eir" name="eircode" placeholder="T23 X4P2" value="${esc(q?.eircode||'')}"></label>
+        <label class="f">Tenant surname<input id="ck-sur" name="surname" placeholder="Nair" value="${esc(q?.surname||'')}"></label>
+        <label class="f full">Deposit amount (€)<input id="ck-amt" name="amount" type="number" inputmode="decimal" placeholder="1850" value="${esc(q?.amount||'')}"></label>
+      </div>
+      <div class="row"><button class="btn btn-p" type="submit">Check protection</button><button class="btn btn-g btn-sm" type="button" data-act="ck-sample">Fill example</button></div>
+    </form>
+    <div class="stack">${res || `<div class="card stack"><h3>What you'll see</h3><p class="muted">The certificate number, status, amount and the date the deposit was protected. Status updates as soon as funds arrive or a repayment starts.</p></div>`}</div>
+  </div>`;
+}
+function lookup(q){
+  const dpc = (q.dpc||'').trim().toUpperCase();
+  if (dpc) return S.deposits.find(d => d.dpc === dpc && d.status !== 'awaiting_payment') || null;
+  const e = (q.eircode||'').replace(/\s/g,'').toUpperCase(), s = (q.surname||'').trim().toLowerCase(), a = Number(q.amount);
+  if (!e || !s || !a) return null;
+  return S.deposits.find(d => d.status !== 'awaiting_payment' && d.eircode.replace(/\s/g,'').toUpperCase() === e && Number(d.amount) === a && d.tenants.some(t => t.name.toLowerCase().split(' ').slice(-1)[0] === s || t.name.toLowerCase().endsWith(s))) || null;
+}
+
+/* ---------------- sign in ---------------- */
+function vSignin(){
+  const order = ['L1','A1','T1','T3','J1','OPS'];
+  const extra = Object.keys(S.users).filter(k => !order.includes(k));
+  return phead('Sign in', 'Choose a demo account', 'In production, sign-in uses email with multi-factor authentication and identity verification. For the demo, pick a role.') + `
+  <div class="wrap page two">
+    <div class="grid2">${[...order, ...extra].map(k => { const u = S.users[k]; return `<button class="card persona" data-act="as" data-u="${k}"><span class="av ${u.role==='tenant'||u.role==='adjudicator'?'b':''}">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</span><span><b>${esc(u.name)}</b><br><span class="small muted">${esc(u.role[0].toUpperCase()+u.role.slice(1))} · ${esc(u.org||'')}</span></span></button>`; }).join('')}</div>
+    <form class="card stack" data-form="register"><h3>Register a new landlord account</h3><p class="small muted">Creates a demo account in this browser only.</p>
+      <label class="f">Full name<input id="rg-name" name="name" required placeholder="Niamh Brennan"></label>
+      <label class="f">Email<input id="rg-email" name="email" type="email" required placeholder="niamh@example.com"></label>
+      <label class="f">Account type<select id="rg-role" name="role"><option value="landlord">Landlord</option><option value="agent">Letting agent</option></select></label>
+      <label class="f">Organisation (agents)<input id="rg-org" name="org" placeholder="Optional"></label>
+      <button class="btn btn-p" type="submit">Create account</button></form>
+  </div>`;
+}
+
+/* ---------------- dashboards ---------------- */
+function needsAction(d, p){
+  if (p === 'owner') return d.status === 'awaiting_payment' || (d.status === 'repayment_proposed' && d.proposal.by === 'tenant') || (d.status === 'disputed' && !d.dispute.submitted.owner);
+  if (p === 'tenant') return (d.status === 'repayment_proposed' && d.proposal.by === 'owner') || (d.status === 'disputed' && !d.dispute.submitted.tenant);
+  return false;
+}
+function actionLabel(d, p){
+  if (d.status === 'awaiting_payment') return 'Pay deposit into scheme';
+  if (d.status === 'repayment_proposed') return 'Respond to repayment proposal';
+  if (d.status === 'disputed') return 'Add your evidence';
+  return '';
+}
+function vDashboard(){
+  const u = me();
+  if (u.role === 'admin') return vOps();
+  if (u.role === 'adjudicator') return vAdjQueue();
+  if (u.role === 'tenant') return vTenantDash(u);
+  const mine = S.deposits.filter(d => d.ownerId === u.id);
+  const live = mine.filter(d => !['awaiting_payment','repaid'].includes(d.status));
+  const todo = mine.filter(d => needsAction(d, 'owner'));
+  const held = live.reduce((a, d) => a + d.amount - (d.dispute ? d.dispute.released : 0), 0);
+  return phead(u.role === 'agent' ? 'Agent portfolio' : 'Landlord dashboard', `Welcome back, ${esc(u.name.split(' ')[0])}`, esc(u.org || '')) + `
+  <div class="wrap page">
+    <div class="kpis">
+      <div class="kpi"><span>Deposits protected</span><b>${live.length}</b><small>active tenancies</small></div>
+      <div class="kpi"><span>Funds held for you</span><b>${eur(held)}</b><small>in ring-fenced account</small></div>
+      <div class="kpi"><span>Needs your action</span><b style="color:${todo.length?'var(--warn)':'inherit'}">${todo.length}</b><small>see below</small></div>
+      <div class="kpi"><span>Closed</span><b>${mine.filter(d=>d.status==='repaid').length}</b><small>repaid deposits</small></div>
+    </div>
+    <div class="row between" style="margin-bottom:14px"><h2 style="font-size:1.35rem">Your deposits</h2>
+      <div class="row">${u.role==='agent'?`<button class="btn btn-s" data-act="bulk">Bulk import CSV</button>`:''}<a class="btn btn-p" href="#protect">Protect a new deposit</a></div></div>
+    ${todo.length ? `<div class="stack" style="margin-bottom:18px">${todo.map(d => `<div class="card row between" style="border-color:color-mix(in srgb,var(--warn) 45%,var(--line));padding:14px 18px"><div><b>${esc(actionLabel(d,'owner'))}</b><div class="small muted">${esc(d.address)} · ${eur(d.amount)}</div></div><a class="btn btn-p btn-sm" href="#deposit-${d.id}">Open</a></div>`).join('')}
+      ${u.role==='agent' && todo.filter(d=>d.status==='awaiting_payment').length>1 ? `<button class="btn btn-gold" style="align-self:flex-start" data-act="pay-all">Pay all ${todo.filter(d=>d.status==='awaiting_payment').length} awaiting deposits in one payment</button>`:''}</div>` : ''}
+    ${depTable(mine)}
+  </div>`;
+}
+function depTable(list, showOwner){
+  if (!list.length) return `<div class="card empty">No deposits yet. <a href="#protect">Protect your first deposit</a>.</div>`;
+  return `<div class="tbl-wrap"><table><thead><tr><th>Certificate</th><th>Property</th>${showOwner?'<th>Landlord / agent</th>':''}<th>Tenants</th><th class="r">Deposit</th><th>Status</th></tr></thead><tbody>
+    ${list.map(d => `<tr class="click" data-act="open" data-id="${d.id}"><td class="mono">${d.dpc}</td><td>${esc(d.address)}<div class="small muted">${esc(d.eircode)}</div></td>${showOwner?`<td>${esc(ownerName(d))}</td>`:''}<td>${esc(tenantNames(d))}</td><td class="r num">${eur(d.amount)}</td><td>${pill(d.status)}</td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+function vTenantDash(u){
+  const mine = S.deposits.filter(d => d.tenants.some(t => t.uid === u.id));
+  return phead('Tenant account', `Hi ${esc(u.name.split(' ')[0])}`, 'Your protected deposits and anything waiting on you.') + `
+  <div class="wrap page stack" style="gap:16px">
+    ${mine.map(d => `<div class="card raised stack">
+      <div class="row between"><div><span class="mono small muted">${d.dpc}</span><h3 style="margin-top:4px">${esc(d.address)}</h3></div>${pill(d.status)}</div>
+      <div class="row" style="gap:28px"><div><span class="small muted">Deposit</span><div style="font-family:var(--f-display);font-size:1.6rem;font-weight:700">${eur(d.amount)}</div></div><div><span class="small muted">Landlord / agent</span><div>${esc(ownerName(d))}</div></div><div><span class="small muted">Protected since</span><div>${fdate(d.protectedAt)}</div></div></div>
+      ${needsAction(d,'tenant') ? `<div class="callout"><b>Action needed:</b> ${esc(actionLabel(d,'tenant'))}</div>`:''}
+      <div class="row"><a class="btn btn-p btn-sm" href="#deposit-${d.id}">Open deposit</a>${d.status!=='awaiting_payment'?`<button class="btn btn-s btn-sm" data-act="cert" data-id="${d.id}">View certificate</button>`:''}</div>
+    </div>`).join('') || '<div class="card empty">No deposits are linked to your account yet.</div>'}
+  </div>`;
+}
+function vAdjQueue(){
+  const q = S.deposits.filter(d => d.status === 'adjudication');
+  const ev = S.deposits.filter(d => d.status === 'disputed');
+  const done = S.deposits.filter(d => d.decision);
+  return phead('Adjudication', 'Case queue', 'Cases where both parties have finished submitting evidence. Decisions must be written and reasoned.') + `
+  <div class="wrap page stack" style="gap:22px">
+    <div class="kpis"><div class="kpi"><span>Ready for decision</span><b>${q.length}</b></div><div class="kpi"><span>In evidence stage</span><b>${ev.length}</b></div><div class="kpi"><span>Decided (demo)</span><b>${done.length}</b></div><div class="kpi"><span>Target decision time</span><b>28 days</b></div></div>
+    <h2 style="font-size:1.3rem">Ready for decision</h2>${depTable(q, true)}
+    <h2 style="font-size:1.3rem">Evidence stage</h2>${depTable(ev, true)}
+  </div>`;
+}
+
+/* ---------------- deposit page ---------------- */
+function vDeposit(id){
+  const d = dep(id), u = me();
+  if (!d) return phead('Not found','Deposit not found','') ;
+  const p = partyOf(d, u);
+  if (!p) return phead('No access', 'You can\'t view this deposit', 'Only the landlord, the tenants, adjudicators and scheme staff can see it.');
+  const back = u.role === 'admin' ? '#ops' : '#dashboard';
+  const held = d.dispute ? d.dispute.held : d.amount;
+  return `<section class="phead"><div class="wrap"><div class="crumbs"><a href="${back}">Dashboard</a> / Deposit</div>
+    <div class="row between"><div><span class="mono small muted">${d.dpc}</span><h1 style="font-size:clamp(1.5rem,3.4vw,2.2rem);margin-top:6px">${esc(d.address)}</h1></div>
+    <div class="row">${pill(d.status)}<span style="font-family:var(--f-display);font-size:1.8rem;font-weight:800">${eur(d.amount)}</span></div></div></div></section>
+  <div class="wrap page two">
+    <div class="stack" style="gap:18px;min-width:0">
+      <div class="card stack"><h3>Tenancy</h3><dl class="dl">
+        <dt>Eircode</dt><dd class="mono">${esc(d.eircode)}</dd><dt>County</dt><dd>${esc(d.county)}</dd>
+        <dt>Landlord / agent</dt><dd>${esc(ownerName(d))}</dd><dt>RTB registration</dt><dd class="mono">${esc(d.rtb||'—')}</dd>
+        <dt>Start date</dt><dd>${fdate(d.start)}</dd><dt>End date</dt><dd>${d.end?fdate(d.end):'Ongoing'}</dd>
+        <dt>Monthly rent</dt><dd>${eur(d.rent)}</dd><dt>Deposit</dt><dd>${eur(d.amount)} ${d.amount<=d.rent?'<span class="pill p-ok">Within 1-month limit</span>':''}</dd>
+        <dt>Payment ref.</dt><dd class="mono">${esc(d.payRef||'Not yet received')}</dd></dl></div>
+      <div class="card stack"><h3>Tenants</h3>${d.tenants.map(t => `<div class="row between"><span>${esc(t.name)} ${t.lead?'<span class="pill p-muted">Lead tenant</span>':''}</span><span class="small muted">${esc(t.email)}</span></div>`).join('')}</div>
+      ${d.proposal ? proposalCard(d) : ''}
+      ${d.dispute ? disputeCard(d, p) : ''}
+      ${d.decision ? decisionCard(d) : ''}
+      <div class="card stack"><h3>Activity</h3><ul class="tl">${[...d.timeline].reverse().map(e => `<li><time>${fdate(e.at)}</time><span>${esc(e.text)}</span></li>`).join('')}</ul></div>
+    </div>
+    <div class="stack action-card" style="gap:16px">${actionPanel(d, p)}</div>
+  </div>`;
+}
+function splitBar(toT, toL, heldAmt, total){
+  const pc = v => (100 * v / total).toFixed(2) + '%';
+  return `<div class="split"><i class="t" style="width:${pc(toT)}"></i>${heldAmt?`<i class="h" style="width:${pc(heldAmt)}"></i>`:''}<i class="l" style="width:${pc(toL)}"></i></div>
+  <div class="legend"><span><i style="background:var(--brand)"></i>Tenant ${eur(toT)}</span>${heldAmt?`<span><i style="background:var(--muted);opacity:.5"></i>Held ${eur(heldAmt)}</span>`:''}<span><i style="background:var(--brass)"></i>Landlord ${eur(toL)}</span></div>`;
+}
+function proposalCard(d){
+  const pr = d.proposal;
+  return `<div class="card stack"><div class="row between"><h3>Repayment proposal</h3><span class="small muted">by ${pr.by==='owner'?'landlord / agent':'tenant'} · ${fdate(pr.at)}</span></div>
+    ${splitBar(pr.toTenant, pr.toLandlord, 0, d.amount)}
+    ${pr.items.length ? `<div class="tbl-wrap"><table><thead><tr><th>Deduction</th><th>Reason</th><th class="r">Amount</th></tr></thead><tbody>${pr.items.map(i => `<tr><td>${esc(i.cat)}</td><td>${esc(i.note)}</td><td class="r num">${eur(i.amount)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted small">No deductions proposed. Full deposit to tenant.</p>'}
+  </div>`;
+}
+function disputeCard(d, p){
+  const ds = d.dispute;
+  const side = (k, label) => `<div class="stack" style="gap:8px;min-width:0"><div class="row between"><b>${label}</b>${ds.submitted[k]?'<span class="pill p-ok">Submitted</span>':'<span class="pill p-warn">Not submitted</span>'}</div>
+     <p class="small" style="white-space:pre-wrap">${esc(ds.statements[k] || 'No statement yet.')}</p>
+     <div class="files">${(ds.evidence[k]||[]).map(f => `<div class="file"><span>${esc(f.n)}</span><span class="muted">${f.s} MB</span></div>`).join('') || '<span class="small muted">No files</span>'}</div></div>`;
+  return `<div class="card stack"><div class="row between"><h3>Dispute</h3><span class="small muted">raised ${fdate(ds.at)}</span></div>
+    ${splitBar(ds.released, 0, ds.held, d.amount)}
+    <p class="small muted">${eur(ds.released)} undisputed was released to the tenant when the dispute was raised. ${eur(ds.held)} is held for adjudication.${ds.tenantAccepts?` The tenant accepts ${eur(ds.tenantAccepts)} of the claim.`:''}</p>
+    <div class="grid2">${side('owner','Landlord / agent')}${side('tenant','Tenant')}</div></div>`;
+}
+function decisionCard(d){
+  const dc = d.decision;
+  return `<div class="card stack" style="border-color:var(--brass)"><div class="row between"><h3>Adjudicator's decision</h3><span class="small muted">${esc(dc.by)} · ${fdate(dc.at)}</span></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Claim</th><th class="r">Claimed</th><th class="r">Awarded to landlord</th></tr></thead><tbody>${dc.awards.map(a => `<tr><td>${esc(a.cat)}</td><td class="r num">${eur(a.claimed)}</td><td class="r num">${eur(a.award)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small" style="white-space:pre-wrap">${esc(dc.reasoning)}</p></div>`;
+}
+const CATS = ['Cleaning','Damage','Rent arrears','Utilities','Missing items','Other'];
+function dedRows(prefix, n, items){
+  let h = '';
+  for (let i = 0; i < n; i++) { const it = (items||[])[i] || {};
+    h += `<div class="ded"><select id="${prefix}-c${i}" name="c${i}" aria-label="Category">${CATS.map(c => `<option ${it.cat===c?'selected':''}>${c}</option>`).join('')}</select><input id="${prefix}-a${i}" name="a${i}" type="number" min="0" step="0.01" inputmode="decimal" placeholder="€0" value="${it.amount||''}" aria-label="Amount"><input id="${prefix}-n${i}" name="n${i}" placeholder="Reason" value="${esc(it.note||'')}" aria-label="Reason"></div>`; }
+  return h;
+}
+function actionPanel(d, p){
+  const isParty = p === 'owner' || p === 'tenant';
+  const certBtn = d.status !== 'awaiting_payment' ? `<button class="btn btn-s" data-act="cert" data-id="${d.id}">View certificate</button>` : '';
+  switch (d.status){
+    case 'awaiting_payment':
+      return p === 'owner'
+        ? `<div class="card raised stack"><h3>Lodge the deposit</h3><p class="muted small">Pay ${eur(d.amount)} to MyDeposit.ie. The certificate is issued as soon as funds arrive.</p><button class="btn btn-p" data-act="pay" data-id="${d.id}">Pay ${eur(d.amount)} now</button></div>`
+        : `<div class="card stack"><h3>Waiting for funds</h3><p class="muted small">The landlord has registered this tenancy but has not paid the deposit in yet.</p></div>`;
+    case 'protected':
+      if (!isParty) return `<div class="card stack"><h3>Protected</h3><p class="muted small">Held since ${fdate(d.protectedAt)}.</p>${certBtn}</div>`;
+      return `<div class="card raised stack"><h3>Deposit protected</h3><p class="muted small">Held in the client account since ${fdate(d.protectedAt)}.</p><div class="row">${certBtn}</div></div>
+        <form class="card stack" data-form="propose" data-id="${d.id}"><h3>Start repayment</h3>
+          <p class="small muted">${p==='owner'?'List any deductions you want to claim. The rest goes to the tenant.':'Propose how the deposit should be repaid. Leave deductions blank to ask for the full amount.'}</p>
+          <label class="f">Tenancy end date<input id="pr-end" name="end" type="date" value="${d.end||new Date().toISOString().slice(0,10)}" required></label>
+          <div class="stack" style="gap:8px"><span class="small" style="font-weight:600">Deductions</span>${dedRows('pr', 3, p==='owner' && d.id==='d1' ? [{cat:'Cleaning',amount:220,note:'Professional end-of-tenancy clean, carpets and oven'},{cat:'Damage',amount:180,note:'Replace cracked bathroom sink'}] : [])}</div>
+          <div id="pr-sum" class="stack" style="gap:4px"></div>
+          <button class="btn btn-p" type="submit">Send proposal</button></form>`;
+    case 'repayment_proposed': {
+      const pr = d.proposal;
+      if (!isParty) return `<div class="card stack"><h3>Awaiting response</h3><p class="small muted">Proposal sent ${fdate(pr.at)}.</p></div>`;
+      if (pr.by === p) return `<div class="card raised stack"><h3>Waiting for a response</h3><p class="small muted">${p==='owner'?'The tenants have':'The landlord has'} 14 days from ${fdate(pr.at)} to accept or dispute. If there's no response, you can apply for the deposit to be released on a statutory declaration.</p><button class="btn btn-danger btn-sm" data-act="withdraw" data-id="${d.id}">Withdraw proposal</button>${certBtn}</div>`;
+      return `<div class="card raised stack"><h3>Respond to the proposal</h3>
+          <p class="small muted">${p==='tenant'?'Your landlord':'The tenant'} proposes ${eur(pr.toTenant)} to the tenant and ${eur(pr.toLandlord)} to the landlord.</p>
+          <button class="btn btn-p" data-act="accept" data-id="${d.id}">Accept and release funds</button></div>
+        <form class="card stack" data-form="dispute" data-id="${d.id}"><h3>Dispute it</h3>
+          ${p==='tenant'
+            ? `<label class="f">Why do you disagree?<textarea id="ds-why" name="why" required placeholder="Explain which deductions you disagree with and why.">${d.id==='d1'?'The carpets were professionally cleaned on 28 Oct (receipt attached). The sink had a hairline crack at check-in, noted on page 4 of the inventory.':''}</textarea></label>
+               <label class="f">Amount of the claim you accept (€)<input id="ds-acc" name="accept" type="number" min="0" max="${pr.toLandlord}" value="0"><span class="hint">This goes to the landlord now; the rest of the claim is held.</span></label>`
+            : `<p class="small muted">Set out the deductions you are claiming. Anything you don't claim is released to the tenant now.</p>${dedRows('ds', 3, [])}
+               <label class="f">Statement<textarea id="ds-why" name="why" required placeholder="Summarise your claim."></textarea></label>`}
+          <button class="btn btn-danger" type="submit">Raise dispute</button></form>`;
+    }
+    case 'disputed': {
+      if (!isParty) return `<div class="card stack"><h3>Evidence stage</h3><p class="small muted">Both parties have 14 days to upload evidence.</p></div>`;
+      const ds = d.dispute, mineDone = ds.submitted[p], other = p === 'owner' ? 'tenant' : 'owner';
+      return `<form class="card raised stack" data-form="evidence" data-id="${d.id}"><h3>Your evidence</h3>
+          <label class="f">Your statement<textarea id="ev-st" name="statement" required>${esc(ds.statements[p]||'')}</textarea></label>
+          <label class="f">Upload files<input id="ev-files" name="files" type="file" multiple><span class="hint">Inventories, photos, invoices, emails. In this demo only file names are recorded.</span></label>
+          <button class="btn btn-g btn-sm" type="button" data-act="sample-ev" data-id="${d.id}" style="align-self:flex-start">Add sample evidence</button>
+          <div class="row"><button class="btn btn-s" type="submit" name="mode" value="save">Save</button><button class="btn btn-p" type="submit" name="mode" value="submit">${mineDone?'Update submission':'Submit evidence'}</button></div>
+        </form>
+        <div class="card stack"><h3>Send to adjudicator</h3><p class="small muted">${ds.submitted[other]?'The other party has submitted.':'The other party has not submitted yet.'} The case goes to an adjudicator when both have submitted, or when the evidence window closes.</p>
+          <button class="btn btn-gold" data-act="to-adj" data-id="${d.id}" ${mineDone?'':'disabled'}>${ds.submitted[other]?'Send case to adjudicator':'Close evidence window and send (demo)'}</button></div>`;
+    }
+    case 'adjudication': {
+      if (p !== 'adjudicator') return `<div class="card raised stack"><h3>With an adjudicator</h3><p class="small muted">Sent ${fdate(d.dispute.sentAt)}. A written decision is due within 28 days. You'll be emailed when it's issued.</p>${certBtn}</div>`;
+      const items = d.dispute.items || d.proposal.items;
+      return `<form class="card raised stack" data-form="decide" data-id="${d.id}"><h3>Issue decision</h3>
+        <p class="small muted">Award each claim from the ${eur(d.dispute.held)} held. Whatever isn't awarded to the landlord goes to the tenant.</p>
+        ${items.map((it, i) => `<label class="f">${esc(it.cat)} · claimed ${eur(it.amount)}<input id="dc-${i}" name="aw${i}" type="number" min="0" max="${it.amount}" step="0.01" value="${d.id==='d4' ? ({Damage:0, Cleaning:90, Utilities:120}[it.cat] ?? '') : ''}" placeholder="0"><span class="hint">Leave blank to award nothing to the landlord</span></label>`).join('')}
+        <label class="f">Reasoning<textarea id="dc-why" name="why" required rows="6">${d.id==='d4'?'Flooring: the tenant\'s March 2024 email and move-in photos show pre-existing scratches. The water stain is consistent with the balcony seal defect reported twice by the tenant; this is a landlord repair. Nothing awarded.\nCleaning: check-out photos show limescale and grease beyond fair wear after three years; tenant\'s own clean was partial. €90 awarded.\nUtilities: accepted by the tenant. €120 awarded.':''}</textarea></label>
+        <button class="btn btn-p" type="submit">Issue decision and release funds</button></form>`;
+    }
+    case 'repaid': {
+      const po = d.payout;
+      return `<div class="card raised stack"><h3>Repaid and closed</h3>${splitBar(po.toTenant, po.toLandlord, 0, d.amount)}<dl class="dl"><dt>Route</dt><dd>${esc(po.route)}</dd><dt>Paid</dt><dd>${fdate(po.at)}</dd></dl>${certBtn}</div>`;
+    }
+  }
+  return '';
+}
+
+/* ---------------- protect wizard ---------------- */
+let W = null;
+function wizardInit(){ W = {step:0, data:{address:'', eircode:'', county:'Dublin', rtb:'', start:'', rent:'', amount:'', tenants:[{name:'',email:''}]}, err:''}; }
+const COUNTIES = ['Carlow','Cavan','Clare','Cork','Donegal','Dublin','Galway','Kerry','Kildare','Kilkenny','Laois','Leitrim','Limerick','Longford','Louth','Mayo','Meath','Monaghan','Offaly','Roscommon','Sligo','Tipperary','Waterford','Westmeath','Wexford','Wicklow'];
+function vProtect(){
+  const u = me();
+  if (!['landlord','agent'].includes(u.role)) return phead('Protect a deposit', 'Only landlords and agents can lodge deposits', 'Switch to a landlord or agent account in the demo bar.');
+  if (!W) wizardInit();
+  const s = W.step, d = W.data, steps = ['Property','Tenancy','Tenants','Review & pay'];
+  let body = '';
+  if (s === 0) body = `<div class="fgrid">
+      <label class="f full">Property address<input id="wz-addr" name="address" required value="${esc(d.address)}" placeholder="12 Seaview Terrace, Sandymount, Dublin 4"></label>
+      <label class="f">Eircode<input id="wz-eir" name="eircode" required value="${esc(d.eircode)}" placeholder="D04 X9F3" class="mono"><span class="hint">7 characters, e.g. D04 X9F3</span></label>
+      <label class="f">County<select id="wz-county" name="county">${COUNTIES.map(c => `<option ${d.county===c?'selected':''}>${c}</option>`).join('')}</select></label></div>`;
+  if (s === 1) body = `<div class="fgrid">
+      <label class="f">Tenancy start date<input id="wz-start" name="start" type="date" required value="${esc(d.start)}"></label>
+      <label class="f">RTB registration number<input id="wz-rtb" name="rtb" value="${esc(d.rtb)}" placeholder="RT0000…  or leave blank" class="mono"><span class="hint">You can add this later</span></label>
+      <label class="f">Monthly rent (€)<input id="wz-rent" name="rent" type="number" min="1" required value="${esc(d.rent)}"></label>
+      <label class="f">Deposit (€)<input id="wz-amt" name="amount" type="number" min="1" required value="${esc(d.amount)}"><span class="hint">Cannot be more than one month's rent</span></label></div>`;
+  if (s === 2) body = `<div class="stack">${d.tenants.map((t, i) => `<div class="fgrid"><label class="f">Tenant ${i+1} name<input id="wz-tn${i}" name="tn${i}" required value="${esc(t.name)}"></label><label class="f">Email<input id="wz-te${i}" name="te${i}" type="email" required value="${esc(t.email)}"></label></div>`).join('')}
+      <div class="row"><button class="btn btn-s btn-sm" type="button" data-act="wz-add">Add another tenant</button>${d.tenants.length>1?'<button class="btn btn-g btn-sm" type="button" data-act="wz-rem">Remove last</button>':''}</div></div>`;
+  if (s === 3) body = `<dl class="dl"><dt>Property</dt><dd>${esc(d.address)}</dd><dt>Eircode</dt><dd class="mono">${esc(d.eircode.toUpperCase())}</dd><dt>County</dt><dd>${esc(d.county)}</dd><dt>Start</dt><dd>${fdate(d.start)}</dd><dt>Rent</dt><dd>${eur(d.rent)} / month</dd><dt>Deposit</dt><dd>${eur(d.amount)}</dd><dt>RTB number</dt><dd class="mono">${esc(d.rtb||'To follow')}</dd><dt>Tenants</dt><dd>${d.tenants.map(t => esc(t.name)+' · '+esc(t.email)).join('<br>')}</dd></dl>
+      <label class="row small" style="gap:10px;align-items:flex-start"><input id="wz-decl" name="decl" type="checkbox" required style="width:auto;margin-top:3px"><span>I confirm these details are correct, the deposit is not more than one month's rent, and I will give each tenant the certificate and scheme information.</span></label>
+      <div class="callout info small">Custodial protection is free. You'll pay the deposit by instant bank payment on the next screen.</div>`;
+  return phead('Protect a deposit', 'Register a tenancy', 'Four short steps. Tenants are emailed their certificate as soon as the money arrives.') + `
+  <div class="wrap page" style="max-width:820px">
+    <div class="wizard-steps">${steps.map((t, i) => `<span class="${i===s?'on':i<s?'done':''}">${i+1}. ${t}</span>`).join('')}</div>
+    <form class="card raised stack" data-form="wizard" style="gap:18px">
+      ${body}
+      ${W.err ? `<p class="err" role="alert">${esc(W.err)}</p>` : ''}
+      <div class="row between"><div>${s>0?'<button class="btn btn-g" type="button" data-act="wz-back">Back</button>':''}${s===0?'<button class="btn btn-g btn-sm" type="button" data-act="wz-fill">Fill example tenancy</button>':''}</div>
+      <button class="btn btn-p" type="submit">${s===3?'Register and pay '+eur(d.amount):'Continue'}</button></div>
+    </form>
+  </div>`;
+}
+
+/* ---------------- ops / investor ---------------- */
+let M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, perT:9, premium:3, dispute:3, adjCost:220};
+const EMP_PRSI = 0.1125; // approximate employer PRSI rate; verify current rate
+function modelYears(){
+  const ramp = [.12,.35,.6,.82,1];
+  return ramp.map((r, i) => {
+    const n = M.tenancies * (M.share/100) * r;
+    const fup = n * M.avg;
+    const interest = fup * M.yieldPct / 100;
+    const prem = n * M.premium;
+    const ends = n * 0.3, disputes = ends * M.dispute/100;
+    const founderCost = M.founder * (1 + EMP_PRSI);
+    const opex = M.fixed*1e6*(i===0?0.8:1) + founderCost + n*M.perT + disputes*M.adjCost;
+    return {y:i+1, n, fup, interest, prem, rev: interest+prem, opex, ebitda: interest+prem-opex, disputes};
+  });
+}
+function chartSvg(rows){
+  const W2 = 560, H = 230, pl = 52, pb = 26, pt = 14, max = Math.max(...rows.map(r => Math.max(r.rev, r.opex))) * 1.1;
+  const step = (W2 - pl - 10) / rows.length, bw = step * 0.3;
+  const y = v => pt + (H - pt - pb) * (1 - v / max);
+  const ticks = 4; let g = '';
+  for (let i = 0; i <= ticks; i++){ const v = max * i / ticks; g += `<line class="grid" x1="${pl}" x2="${W2-6}" y1="${y(v)}" y2="${y(v)}"/><text x="${pl-8}" y="${y(v)+4}" text-anchor="end">${eurM(v)}</text>`; }
+  const bars = rows.map((r, i) => { const x = pl + i*step + step*0.18; return `<rect class="bar" x="${x}" y="${y(r.rev)}" width="${bw}" height="${y(0)-y(r.rev)}" rx="3"><title>Revenue ${eurM(r.rev)}</title></rect><rect class="bar2" x="${x+bw+4}" y="${y(r.opex)}" width="${bw}" height="${y(0)-y(r.opex)}" rx="3"><title>Costs ${eurM(r.opex)}</title></rect><text x="${x+bw+2}" y="${H-8}" text-anchor="middle">Year ${r.y}</text>`; }).join('');
+  return `<div style="overflow-x:auto"><svg class="chart" viewBox="0 0 ${W2} ${H}" style="width:100%;min-width:420px;height:auto" role="img" aria-label="Revenue versus costs by year">${g}${bars}</svg></div>
+  <div class="legend"><span><i style="background:var(--brand)"></i>Revenue (interest + Agent Pro)</span><span><i style="background:var(--brass)"></i>Operating costs</span></div>`;
+}
+function vOps(){
+  tick('ops');
+  const all = S.deposits, live = all.filter(d => !['awaiting_payment','repaid'].includes(d.status));
+  const fup = live.reduce((a, d) => a + d.amount - (d.dispute ? d.dispute.released : 0), 0);
+  const cnt = st => all.filter(d => d.status === st).length;
+  const rows = modelYears(), y5 = rows[4];
+  const rng = (k, label, min, max, step, fmtv) => `<div class="range"><label for="m-${k}">${label}</label><output id="o-${k}">${fmtv(M[k])}</output><input id="m-${k}" type="range" min="${min}" max="${max}" step="${step}" value="${M[k]}" data-m="${k}"></div>`;
+  return phead('Scheme operations', 'Operations & investor view', 'Live figures from this demo ledger, and a five-year scale model with adjustable assumptions.') + `
+  <div class="wrap page stack" style="gap:26px">
+    <div class="kpis">
+      <div class="kpi"><span>Funds under protection</span><b>${eur(fup)}</b><small>demo ledger, ${live.length} live deposits</small></div>
+      <div class="kpi"><span>Interest run-rate</span><b>${eur(Math.round(fup*NET_YIELD))}</b><small>per year at ${(NET_YIELD*100).toFixed(1)}% net</small></div>
+      <div class="kpi"><span>Open disputes</span><b>${cnt('disputed')+cnt('adjudication')}</b><small>${cnt('adjudication')} with adjudicator</small></div>
+      <div class="kpi"><span>Awaiting funds</span><b>${cnt('awaiting_payment')}</b><small>registered, not yet paid</small></div>
+    </div>
+    <div class="two">
+      <div class="card stack" style="min-width:0"><div class="row between"><h3>Scale model · Year 5</h3><span class="pill p-brass">Assumptions</span></div>
+        <div class="grid4" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+          <div><span class="small muted">Deposits held</span><div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700">${Math.round(y5.n).toLocaleString('en-IE')}</div></div>
+          <div><span class="small muted">Funds held</span><div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700">${eurM(y5.fup)}</div></div>
+          <div><span class="small muted">Revenue</span><div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700">${eurM(y5.rev)}</div></div>
+          <div><span class="small muted">EBITDA</span><div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700;color:${y5.ebitda>=0?'var(--ok)':'var(--bad)'}">${eurM(y5.ebitda)}</div></div>
+        </div>
+        ${chartSvg(rows)}
+        <div class="tbl-wrap"><table><thead><tr><th>Year</th><th class="r">Deposits</th><th class="r">Funds held</th><th class="r">Interest</th><th class="r">Agent Pro</th><th class="r">Costs</th><th class="r">EBITDA</th></tr></thead><tbody>
+          ${rows.map(r => `<tr><td>Y${r.y}</td><td class="r num">${Math.round(r.n).toLocaleString('en-IE')}</td><td class="r num">${eurM(r.fup)}</td><td class="r num">${eurM(r.interest)}</td><td class="r num">${eurM(r.prem)}</td><td class="r num">${eurM(r.opex)}</td><td class="r num" style="color:${r.ebitda>=0?'var(--ok)':'var(--bad)'}">${eurM(r.ebitda)}</td></tr>`).join('')}
+        </tbody></table></div></div>
+      <div class="card stack"><h3>Assumptions</h3>
+        ${rng('tenancies','Private tenancies in the market',150000,450000,10000,v=>Number(v).toLocaleString('en-IE'))}
+        ${rng('share','Year-5 market share',5,100,1,v=>v+'%')}
+        ${rng('avg','Average deposit',900,3000,50,v=>eur(v))}
+        ${rng('yieldPct','Net yield on held funds',0.25,4,0.05,v=>Number(v).toFixed(2)+'%')}
+        ${rng('founder','Founder salary (+ employer PRSI)',0,150000,5000,v=>eur(v))}
+        ${rng('fixed','Other fixed costs (€m / year)',0.8,4,0.01,v=>'€'+Number(v).toFixed(2)+'m')}
+        ${rng('perT','Variable cost per deposit',2,25,1,v=>eur(v))}
+        ${rng('premium','Agent Pro revenue per deposit',0,10,0.5,v=>eur(v))}
+        ${rng('dispute','Dispute rate at tenancy end',0.5,10,0.5,v=>v+'%')}
+        <p class="small muted">Ramp: 12%, 35%, 60%, 82%, 100% of year-5 share. 30% of tenancies end each year. Founder salary is costed in full from year 1 with employer PRSI at about 11.25%. Every figure here is an assumption to be validated against RTB data and bank term sheets.</p>
+        <button class="btn btn-g btn-sm" data-act="m-reset" style="align-self:flex-start">Reset assumptions</button></div>
+    </div>
+    <div class="two">
+      <div style="min-width:0" class="stack"><h3>All deposits</h3>${depTable(all, true)}</div>
+      <div class="card stack"><h3>Notifications sent</h3><p class="small muted">Emails the scheme sends automatically. Simulated in the demo.</p>
+        <div class="stack" style="gap:8px;max-height:520px;overflow:auto">${S.outbox.slice(0,30).map(m => `<div class="mail"><b>${esc(m.subject)}</b><span class="muted small">To ${esc(m.to)} · ${fdate(m.at)}</span></div>`).join('')}</div></div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- certificate & payment ---------------- */
+function certHtml(d){
+  return `<div class="cert">${SEAL}
+    <span class="ce">MyDeposit.ie Deposit Protection · Custodial scheme</span>
+    <h3 style="margin-top:8px">Deposit Protection Certificate</h3>
+    <p style="margin-top:6px;font-size:.88rem;color:#55605B;max-width:46ch">This certifies that the deposit below is held by MyDeposit.ie in a ring-fenced client account until it is repaid under the scheme rules.</p>
+    <div class="amt" style="margin-top:16px">${eur(d.amount)}</div>
+    <div class="cgrid">
+      <div><span>Certificate number</span><b style="font-family:var(--f-mono)">${d.dpc}</b></div>
+      <div><span>Protected on</span><b>${fdate(d.protectedAt)}</b></div>
+      <div><span>Property</span><b>${esc(d.address)}, ${esc(d.eircode)}</b></div>
+      <div><span>Tenancy start</span><b>${fdate(d.start)}</b></div>
+      <div><span>Landlord / agent</span><b>${esc(ownerName(d))}</b></div>
+      <div><span>Tenant(s)</span><b>${esc(tenantNames(d))}</b></div>
+    </div>
+    <div style="font-size:.78rem;color:#3E4A45;margin-bottom:16px"><b>Scheme information.</b> To get your deposit back, either party can start a repayment at mydeposit.ie (demo) using this certificate number. If you disagree with a proposed deduction, the undisputed amount is released at once and you may use free independent adjudication or refer the dispute to the Residential Tenancies Board.</div>
+    <div class="foot"><span>Verify at mydeposit.ie/check (demo)<br>Issued electronically. No signature required.</span>${qrSvg(d.dpc)}</div>
+  </div>`;
+}
+function showCert(d){
+  openModal('Deposit Protection Certificate', certHtml(d) + `<div class="row" style="margin-top:16px"><button class="btn btn-s" data-act="resend" data-id="${d.id}">Resend to tenants</button><button class="btn btn-g" data-act="copy-dpc" data-dpc="${d.dpc}">Copy certificate number</button></div>`);
+}
+function showPay(ids){
+  const list = ids.map(dep), total = list.reduce((a, d) => a + d.amount, 0);
+  const ref = 'MDI-PAY-' + Math.floor(10000 + Math.random()*89999);
+  openModal('Pay deposit into MyDeposit.ie', `<div class="stack" style="gap:16px">
+    <div class="row between"><span class="muted">${list.length>1?list.length+' deposits':esc(list[0].address)}</span><b style="font-family:var(--f-display);font-size:1.6rem">${eur(total)}</b></div>
+    <div class="bank" id="bank-step"><div class="bank-top"><b>Instant bank payment</b><span class="pill p-ok">Recommended</span></div>
+      <p class="small muted">You'll approve the payment in your banking app. Funds arrive in seconds and the certificate is issued straight away.</p>
+      <div class="row" style="margin-top:12px"><button class="btn btn-p" data-act="bank-go" data-ids="${ids.join(',')}" data-ref="${ref}">Continue to Demo Bank</button></div></div>
+    <div class="bank"><div class="bank-top"><b>Manual SEPA transfer</b></div>
+      <dl class="dl small"><dt>Account name</dt><dd>MyDeposit.ie Client Deposits (Trust)</dd><dt>IBAN</dt><dd class="mono">IE00 DEMO 0000 0000 0000 00</dd><dt>BIC</dt><dd class="mono">DEMOIE2D</dd><dt>Reference</dt><dd class="mono">${ref}</dd></dl>
+      <button class="btn btn-s btn-sm" data-act="bank-done" data-ids="${ids.join(',')}" data-ref="${ref}" data-method="SEPA transfer" style="margin-top:10px">Simulate transfer received</button></div>
+    <p class="small muted">Demo only. No real payment is taken and the bank details are fictional.</p></div>`);
+}
+function bankGo(btn){
+  const ids = btn.dataset.ids, ref = btn.dataset.ref;
+  $('#bank-step').innerHTML = `<div class="bank-top"><b>Demo Bank</b><span class="small muted mono">secure session</span></div>
+    <p class="small">Approve payment of <b>${eur(ids.split(',').map(dep).reduce((a,d)=>a+d.amount,0))}</b> to <b>MyDeposit.ie Client Deposits (Trust)</b>, reference <span class="mono">${ref}</span>.</p>
+    <p class="small muted" style="margin-top:6px">Payee name matches account holder (Verification of Payee).</p>
+    <div class="row" style="margin-top:12px"><button class="btn btn-p" data-act="bank-done" data-ids="${ids}" data-ref="${ref}" data-method="instant bank payment">Approve in banking app</button><button class="btn btn-g" data-act="close-modal">Cancel</button></div>`;
+}
+function bankDone(btn){
+  const ids = btn.dataset.ids.split(','), ref = btn.dataset.ref, method = btn.dataset.method;
+  $('#bank-step') && ($('#bank-step').innerHTML = `<div class="row"><div class="spinner"></div><span>Confirming funds with the client account…</span></div>`);
+  setTimeout(() => {
+    ids.forEach(id => { const d = dep(id); d.status = 'protected'; d.received = d.protectedAt = nowIso(); d.payRef = ref; log(d, `Deposit of ${eur(d.amount)} received by ${method}`); log(d, `Deposit Protection Certificate issued and sent to ${d.tenants.length} tenant${d.tenants.length>1?'s':''}`); notify(tenantEmails(d), `Your deposit of ${eur(d.amount)} is protected · ${d.dpc}`, d.id); });
+    tick('protect'); save();
+    if (ids.length === 1) { showCert(dep(ids[0])); } else { closeModal(); toast(`${ids.length} deposits protected. Certificates sent to tenants.`); }
+    render();
+  }, 900);
+}
+
+/* ---------------- tour ---------------- */
+const TOUR = [
+  {k:'home', t:'Public site', d:'The trust story: free custodial protection, ring-fenced funds, fair repayment.', u:null, go:'home'},
+  {k:'protect', t:'Landlord protects a deposit', d:'Aoife registers a tenancy, pays by instant bank payment and the certificate is issued.', u:'L1', go:'protect'},
+  {k:'check', t:'Tenant checks protection', d:'Any tenant can verify with a certificate number or Eircode.', u:null, go:'check'},
+  {k:'propose', t:'Landlord proposes repayment', d:'At move-out Aoife claims €400 of deductions on the Cork deposit.', u:'L1', go:'deposit-d1'},
+  {k:'dispute', t:'Tenant disputes', d:'Ciarán disputes. The undisputed €1,450 is released the same day.', u:'T1', go:'deposit-d1'},
+  {k:'decide', t:'Adjudicator decides', d:'Sinéad reviews both sides on the Dublin 8 case and issues a reasoned decision.', u:'J1', go:'deposit-d4'},
+  {k:'agent', t:'Agent bulk import', d:'Liffey Residential imports three tenancies by CSV and pays them in one go.', u:'A1', go:'dashboard'},
+  {k:'ops', t:'Operations & investor view', d:'Funds under protection, interest run-rate and the five-year model.', u:'OPS', go:'ops'}
+];
+function showTour(){
+  openModal('Investor demo script', `<div class="stack" style="gap:10px">${TOUR.map((s, i) => `<div class="tour ${S.tour[s.k]?'done':''}"><span class="ck">${S.tour[s.k]?'✓':i+1}</span><div><b>${s.t}</b><p>${s.d}</p></div><button class="btn btn-s btn-sm" data-act="tour-go" data-i="${i}">Go</button></div>`).join('')}
+  <p class="small muted">Steps tick off as you complete them. Use Reset in the demo bar to start again with fresh data.</p></div>`);
+}
+function switchUser(){
+  openModal('Switch user', `<div class="stack" style="gap:8px">${Object.values(S.users).map(u => `<button class="card persona" style="padding:12px" data-act="as" data-u="${u.id}"><span class="av ${u.role==='tenant'||u.role==='adjudicator'?'b':''}">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</span><span><b>${esc(u.name)}</b><br><span class="small muted">${esc(u.role)} · ${esc(u.org||'')}</span></span></button>`).join('')}
+    <button class="btn btn-s" data-act="signout">Continue as a public visitor</button></div>`);
+}
+
+/* ---------------- router ---------------- */
+let checkQ = null;
+function render(){
+  const h = (location.hash || '#home').slice(1) || 'home';
+  const needAuth = h === 'dashboard' || h === 'protect' || h === 'ops' || h.startsWith('deposit-');
+  if (needAuth && !me()) { S.after = h; save(); location.hash = 'signin'; return; }
+  let main;
+  if (h === 'home') { main = vHome(); tick('home'); }
+  else if (h === 'landlords') main = vLandlords();
+  else if (h === 'tenants') main = vTenants();
+  else if (h === 'disputes') main = vDisputes();
+  else if (h === 'security') main = vSecurity();
+  else if (h === 'check') main = vCheck(checkQ);
+  else if (h === 'signin') main = vSignin();
+  else if (h === 'dashboard') main = vDashboard();
+  else if (h === 'protect') main = vProtect();
+  else if (h === 'ops') main = me().role === 'admin' ? vOps() : phead('Restricted', 'Operations view is for scheme staff', 'Switch to the "Scheme operations" demo user.');
+  else if (h.startsWith('deposit-')) main = vDeposit(h.slice(8));
+  else main = vHome();
+  $('#root').innerHTML = header(h) + `<main id="main">${main}</main>` + footer() + demobar();
+  if (h.startsWith('deposit-')) updateProposalSum();
+  save();
+}
+function navTo(h){ if (location.hash === '#' + h) { render(); } else { location.hash = h; } window.scrollTo(0, 0); }
+window.addEventListener('hashchange', () => { checkQ = null; render(); window.scrollTo(0, 0); });
+
+function signInAs(id, go){
+  S.session = id; const target = go || S.after || (S.users[id].role === 'admin' ? 'ops' : 'dashboard'); S.after = null; save(); closeModal();
+  toast(`Signed in as ${S.users[id].name}`); navTo(target);
+}
+
+function readDed(fd, n){
+  const items = [];
+  for (let i = 0; i < n; i++) { const a = Number(fd.get('a'+i)); if (a > 0) items.push({cat: fd.get('c'+i), amount: Math.round(a*100)/100, note: (fd.get('n'+i)||'').trim() || '(no reason given)'}); }
+  return items;
+}
+function updateProposalSum(){
+  const f = document.querySelector('form[data-form="propose"]'); if (!f) return;
+  const d = dep(f.dataset.id), items = readDed(new FormData(f), 3), ded = items.reduce((a, i) => a + i.amount, 0);
+  const box = $('#pr-sum');
+  if (ded > d.amount) { box.innerHTML = `<p class="err">Deductions (${eur(ded)}) are more than the deposit (${eur(d.amount)}).</p>`; return; }
+  box.innerHTML = splitBar(d.amount - ded, ded, 0, d.amount);
+}
+
+/* ---------------- actions ---------------- */
+const ACT = {
+  'menu': () => $('#nav').classList.toggle('open'),
+  'close-modal': closeModal,
+  'signout': () => { S.session = null; save(); closeModal(); toast('Signed out'); navTo('home'); },
+  'as': b => signInAs(b.dataset.u, b.dataset.go),
+  'switch': switchUser,
+  'tour': showTour,
+  'tour-go': b => { const s = TOUR[+b.dataset.i]; closeModal(); if (s.k === 'protect') wizardInit(); if (s.k === 'check') { checkQ = null; }
+    if (s.u) signInAs(s.u, s.go); else { S.session = null; save(); navTo(s.go); } },
+  'reset': () => openModal('Reset demo data?', `<p>This restores the original demo deposits and signs you out. Anything you created in this browser is removed.</p><div class="row" style="margin-top:16px"><button class="btn btn-danger" data-act="reset-yes">Reset demo</button><button class="btn btn-g" data-act="close-modal">Cancel</button></div>`),
+  'reset-yes': () => { S = seed(); W = null; M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, perT:9, premium:3, dispute:3, adjCost:220}; save(); closeModal(); toast('Demo reset'); navTo('home'); },
+  'open': b => navTo('deposit-' + b.dataset.id),
+  'cert': b => showCert(dep(b.dataset.id)),
+  'resend': b => { const d = dep(b.dataset.id); notify(tenantEmails(d), `Your Deposit Protection Certificate · ${d.dpc}`, d.id); log(d, 'Certificate re-sent to tenants'); save(); toast('Certificate re-sent to ' + d.tenants.length + ' tenant(s)'); },
+  'copy-dpc': b => { const v = b.dataset.dpc; try { navigator.clipboard.writeText(v).then(() => toast('Copied ' + v), () => toast(v)); } catch(e) { toast(v); } },
+  'pay': b => showPay([b.dataset.id]),
+  'pay-all': () => showPay(S.deposits.filter(d => d.ownerId === me().id && d.status === 'awaiting_payment').map(d => d.id)),
+  'bank-go': bankGo,
+  'bank-done': bankDone,
+  'ck-sample': () => { checkQ = {eircode:'T23 X4P2', surname:'Nair', amount:'1850'}; tick('check'); render(); },
+  'withdraw': b => { const d = dep(b.dataset.id); d.status = 'protected'; delete d.proposal; log(d, 'Repayment proposal withdrawn'); save(); toast('Proposal withdrawn'); render(); },
+  'accept': b => {
+    const d = dep(b.dataset.id), pr = d.proposal;
+    d.status = 'repaid'; d.payout = {toTenant: pr.toTenant, toLandlord: pr.toLandlord, at: nowIso(), route: 'Agreed by both parties'};
+    log(d, `Proposal accepted. ${eur(pr.toTenant)} paid to tenant, ${eur(pr.toLandlord)} to landlord by SEPA Instant`);
+    notify(tenantEmails(d) + '; ' + (S.users[d.ownerId].email||''), `Deposit repaid · ${d.dpc}`, d.id); save(); toast('Accepted. Funds released.'); render(); },
+  'sample-ev': b => { const d = dep(b.dataset.id), p = partyOf(d, me());
+    const set = p === 'owner' ? [{n:'check-in-inventory.pdf',s:2.1},{n:'check-out-photos.zip',s:14.8},{n:'cleaning-invoice.pdf',s:0.2}] : [{n:'cleaning-receipt-28-oct.jpg',s:0.9},{n:'inventory-page-4-sink.png',s:1.3},{n:'move-out-video.mp4',s:46.2}];
+    d.dispute.evidence[p] = [...(d.dispute.evidence[p]||[]), ...set]; save(); toast('Sample evidence added'); render(); },
+  'to-adj': b => { const d = dep(b.dataset.id); d.status = 'adjudication'; d.dispute.sentAt = nowIso(); log(d, 'Case sent to independent adjudicator'); notify(tenantEmails(d) + '; ' + (S.users[d.ownerId].email||''), `Your deposit case is now with an adjudicator · ${d.dpc}`, d.id); save(); toast('Case sent to adjudicator'); render(); },
+  'wz-add': () => { captureWizard(); W.data.tenants.push({name:'', email:''}); render(); },
+  'wz-rem': () => { captureWizard(); W.data.tenants.pop(); render(); },
+  'wz-back': () => { captureWizard(); W.step--; W.err = ''; render(); },
+  'wz-fill': () => { W.data = {address:'12 Seaview Terrace, Sandymount, Dublin 4', eircode:'D04 X9F3', county:'Dublin', rtb:'', start:'2026-12-01', rent:'2300', amount:'2300', tenants:[{name:'Róisín Gallagher', email:'roisin.g@example.com'},{name:'Kofi Mensah', email:'kofi.mensah@example.com'}]}; render(); },
+  'bulk': () => openModal('Bulk import tenancies', `<p class="small muted">Upload a CSV with one tenancy per row. For the demo, import the sample file below.</p>
+    <pre class="mono small" style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;margin:12px 0">eircode,address,start,rent,deposit,tenant,email
+D07 P8X2,"Apt 4, Smithfield Sq, Dublin 7",2026-12-01,2050,2050,Aisling Roche,aisling.r@example.com
+D09 K2T6,"22 Iona Road, Glasnevin, Dublin 9",2026-12-01,2300,2300,Marek Nowak,marek.n@example.com
+A94 F3R7,"8 Newtown Ave, Blackrock, Co. Dublin",2026-12-15,2600,2600,Grace Okafor,grace.o@example.com</pre>
+    <label class="f">Your CSV file<input id="bulk-file" type="file" accept=".csv"></label>
+    <div class="row" style="margin-top:14px"><button class="btn btn-p" data-act="bulk-go">Import sample (3 tenancies)</button></div>`),
+  'bulk-go': () => {
+    const rows = [['D07 P8X2','Apt 4, Smithfield Sq, Dublin 7','2026-12-01',2050,'Aisling Roche','aisling.r@example.com'],['D09 K2T6','22 Iona Road, Glasnevin, Dublin 9','2026-12-01',2300,'Marek Nowak','marek.n@example.com'],['A94 F3R7','8 Newtown Ave, Blackrock, Co. Dublin','2026-12-15',2600,'Grace Okafor','grace.o@example.com']];
+    rows.forEach(r => { S.deposits.unshift({id:'d'+Date.now()+Math.floor(Math.random()*1000), dpc:nextDpc(), ownerId:me().id, address:r[1], eircode:r[0], county:'Dublin', rtb:'Pending', start:r[2], end:null, rent:r[3], amount:r[3], tenants:[{name:r[4], email:r[5], uid:null, lead:true}], status:'awaiting_payment', created:nowIso(), timeline:[{at:nowIso(), text:'Imported from CSV. Awaiting deposit funds.'}]}); });
+    tick('agent'); save(); closeModal(); toast('3 tenancies imported. Pay them in one payment.'); render(); },
+  'm-reset': () => { M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, perT:9, premium:3, dispute:3, adjCost:220}; render(); }
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (b) { e.preventDefault(); const f = ACT[b.dataset.act]; if (f && !b.disabled) f(b, e); return; }
+  if (e.target.id === 'modal') closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#modal').hidden) closeModal(); });
+document.addEventListener('input', e => {
+  if (e.target.closest('form[data-form="propose"]')) updateProposalSum();
+  if (e.target.dataset && e.target.dataset.m) { const k = e.target.dataset.m; M[k] = Number(e.target.value); clearTimeout(ACT._mt); ACT._mt = setTimeout(() => { const y = window.scrollY, id = e.target.id; render(); window.scrollTo(0, y); const el = document.getElementById(id); el && el.focus(); }, 60); }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 'ev-files') {
+    const d = dep(e.target.closest('form').dataset.id), p = partyOf(d, me());
+    const files = [...e.target.files].map(f => ({n: f.name, s: Math.max(0.1, Math.round(f.size/1e5)/10)}));
+    d.dispute.evidence[p] = [...(d.dispute.evidence[p]||[]), ...files]; save(); toast(files.length + ' file(s) added'); render();
+  }
+});
+
+function captureWizard(){
+  const f = document.querySelector('form[data-form="wizard"]'); if (!f) return;
+  const fd = new FormData(f), d = W.data;
+  ['address','eircode','county','start','rtb','rent','amount'].forEach(k => { if (fd.has(k)) d[k] = fd.get(k); });
+  d.tenants.forEach((t, i) => { if (fd.has('tn'+i)) { t.name = fd.get('tn'+i); t.email = fd.get('te'+i); } });
+}
+document.addEventListener('submit', e => {
+  const f = e.target, kind = f.dataset.form; if (!kind) return;
+  e.preventDefault();
+  const fd = new FormData(f);
+  if (kind === 'check') {
+    checkQ = {dpc: fd.get('dpc'), eircode: fd.get('eircode'), surname: fd.get('surname'), amount: fd.get('amount')};
+    if (!checkQ.dpc && !(checkQ.eircode && checkQ.surname && checkQ.amount)) { toast('Enter a certificate number, or the Eircode, surname and amount'); return; }
+    tick('check'); render(); return;
+  }
+  if (kind === 'register') {
+    const id = 'U' + Date.now();
+    S.users[id] = {id, role: fd.get('role'), name: fd.get('name').trim(), email: fd.get('email').trim(), org: fd.get('org').trim() || (fd.get('role')==='agent' ? 'Letting agent' : 'Private landlord')};
+    toast('Account created'); signInAs(id, 'dashboard'); return;
+  }
+  if (kind === 'wizard') {
+    captureWizard(); const d = W.data; W.err = '';
+    if (W.step === 0) {
+      if (!d.address.trim()) W.err = 'Enter the property address.';
+      else if (!EIRCODE.test(d.eircode.trim())) W.err = 'That Eircode doesn\'t look right. It should be 7 characters, like D04 X9F3.';
+      else d.eircode = d.eircode.trim().toUpperCase().replace(/^(\w{3})\s?(\w{4})$/, '$1 $2');
+    }
+    if (W.step === 1) {
+      const rent = Number(d.rent), amt = Number(d.amount);
+      if (!d.start) W.err = 'Enter the tenancy start date.';
+      else if (!(rent > 0) || !(amt > 0)) W.err = 'Enter the monthly rent and the deposit amount.';
+      else if (amt > rent) W.err = `A deposit can't be more than one month's rent (${eur(rent)}). Reduce the deposit to ${eur(rent)} or less. Residential Tenancies Act 2004, as amended in 2021.`;
+    }
+    if (W.step === 2) {
+      if (d.tenants.some(t => !t.name.trim() || !/^\S+@\S+\.\S+$/.test(t.email.trim()))) W.err = 'Add a name and a valid email address for every tenant.';
+    }
+    if (W.err) { render(); return; }
+    if (W.step < 3) { W.step++; render(); window.scrollTo(0, 0); return; }
+    const id = 'd' + Date.now();
+    const nd = {id, dpc: nextDpc(), ownerId: me().id, address: d.address.trim(), eircode: d.eircode, county: d.county, rtb: d.rtb.trim() || 'Pending', start: d.start, end: null, rent: Number(d.rent), amount: Number(d.amount),
+      tenants: d.tenants.map((t, i) => ({name: t.name.trim(), email: t.email.trim(), uid: null, lead: i === 0})), status: 'awaiting_payment', created: nowIso(), timeline: [{at: nowIso(), text: 'Tenancy registered. Awaiting deposit funds.'}]};
+    S.deposits.unshift(nd); W = null; save();
+    location.hash = 'deposit-' + id; setTimeout(() => showPay([id]), 50); return;
+  }
+  const d = dep(f.dataset.id), p = partyOf(d, me());
+  if (kind === 'propose') {
+    const items = readDed(fd, 3), ded = items.reduce((a, i) => a + i.amount, 0);
+    if (ded > d.amount) { toast('Deductions are more than the deposit'); return; }
+    d.end = fd.get('end'); d.status = 'repayment_proposed';
+    d.proposal = {by: p, at: nowIso(), toTenant: Math.round((d.amount - ded)*100)/100, toLandlord: ded, items};
+    log(d, `${p==='owner'?'Landlord':'Tenant'} proposed repayment: ${eur(d.amount-ded)} to tenant, ${eur(ded)} to landlord`);
+    notify(p === 'owner' ? tenantEmails(d) : S.users[d.ownerId].email, `A repayment has been proposed for deposit ${d.dpc}`, d.id);
+    tick('propose'); save(); toast('Proposal sent. The other party has 14 days to respond.'); render(); window.scrollTo(0,0); return;
+  }
+  if (kind === 'dispute') {
+    const pr = d.proposal; let items, accept = 0;
+    if (p === 'tenant') { items = pr.items; accept = Math.min(Number(fd.get('accept')) || 0, pr.toLandlord); }
+    else { items = readDed(fd, 3); if (!items.length) { toast('Add at least one deduction you are claiming'); return; } }
+    const claim = items.reduce((a, i) => a + i.amount, 0);
+    if (claim > d.amount) { toast('Claim is more than the deposit'); return; }
+    const released = Math.round((d.amount - claim)*100)/100;
+    d.status = 'disputed';
+    d.dispute = {raisedBy: p, at: nowIso(), items, held: Math.round((claim - accept)*100)/100, released, acceptedPaid: accept, tenantAccepts: accept,
+      statements: {owner: p==='owner' ? fd.get('why') : '', tenant: p==='tenant' ? fd.get('why') : ''}, evidence: {owner: [], tenant: []}, submitted: {owner:false, tenant:false}};
+    if (accept > 0) { d.dispute.items = items.map(i => ({...i})); let left = accept; for (const it of d.dispute.items) { const take = Math.min(left, it.amount); it.amount -= take; left -= take; } d.dispute.items = d.dispute.items.filter(i => i.amount > 0); }
+    log(d, `${p==='tenant'?'Tenant':'Landlord'} disputed the proposal. ${eur(released)} undisputed released to tenant${accept?`, ${eur(accept)} accepted and paid to landlord`:''}. ${eur(d.dispute.held)} held.`);
+    notify(tenantEmails(d) + '; ' + (S.users[d.ownerId].email||''), `Deposit ${d.dpc} is in dispute: upload your evidence within 14 days`, d.id);
+    tick('dispute'); save(); toast(`Dispute raised. ${eur(released)} released to the tenant today.`); render(); window.scrollTo(0,0); return;
+  }
+  if (kind === 'evidence') {
+    const mode = e.submitter && e.submitter.value;
+    d.dispute.statements[p] = fd.get('statement');
+    if (mode === 'submit') { d.dispute.submitted[p] = true; log(d, `${p==='owner'?'Landlord':'Tenant'} submitted evidence (${(d.dispute.evidence[p]||[]).length} files)`); toast('Evidence submitted'); }
+    else toast('Saved');
+    save(); render(); return;
+  }
+  if (kind === 'decide') {
+    const items = d.dispute.items || d.proposal.items;
+    const awards = items.map((it, i) => ({cat: it.cat, claimed: it.amount, award: Math.min(it.amount, Math.max(0, Number(fd.get('aw'+i)) || 0))}));
+    const toL = awards.reduce((a, x) => a + x.award, 0), toT = Math.round((d.dispute.held - toL)*100)/100;
+    d.decision = {by: me().name, at: nowIso(), awards, toLandlord: toL, toTenant: toT, reasoning: fd.get('why')};
+    d.status = 'repaid';
+    d.payout = {toTenant: d.dispute.released + toT, toLandlord: (d.dispute.acceptedPaid||0) + toL, at: nowIso(), route: 'Adjudicator\'s decision'};
+    log(d, `Adjudicator awarded ${eur(toL)} to landlord and ${eur(toT)} to tenant from the held amount`);
+    notify(tenantEmails(d) + '; ' + (S.users[d.ownerId].email||''), `Adjudication decision issued · ${d.dpc}`, d.id);
+    tick('decide'); save(); toast('Decision issued. Funds released.'); render(); window.scrollTo(0,0); return;
+  }
+});
+
+render();
+})();
+</script>
