@@ -839,7 +839,7 @@ function vProtect(){
 }
 
 /* ---------------- ops / investor ---------------- */
-let M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, perT:9, premium:3, dispute:3, adjCost:220};
+let M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, perT:9, premium:3, dispute:3, adjCost:220};
 const EMP_PRSI = 0.1125; // approximate employer PRSI rate; verify current rate
 function modelYears(){
   const ramp = [.12,.35,.6,.82,1];
@@ -870,6 +870,8 @@ function vOps(){
   const fup = live.reduce((a, d) => a + d.amount - (d.dispute ? d.dispute.released : 0), 0);
   const cnt = st => all.filter(d => d.status === st).length;
   const rows = modelYears(), y5 = rows[4];
+  let cum = -M.setup * 1e6, peak = cum, peakYear = 0;
+  rows.forEach(r => { cum += r.ebitda; r.cum = cum; if (cum < peak) { peak = cum; peakYear = r.y; } });
   const rng = (k, label, min, max, step, fmtv) => `<div class="range"><label for="m-${k}">${label}</label><output id="o-${k}">${fmtv(M[k])}</output><input id="m-${k}" type="range" min="${min}" max="${max}" step="${step}" value="${M[k]}" data-m="${k}"></div>`;
   return phead('Scheme operations', 'Operations & investor view', 'Live figures from this demo ledger, and a five-year scale model with adjustable assumptions.') + `
   <div class="wrap page stack" style="gap:26px">
@@ -880,7 +882,7 @@ function vOps(){
       <div class="kpi"><span>Awaiting funds</span><b>${cnt('awaiting_payment')}</b><small>registered, not yet paid</small></div>
     </div>
     <div class="two">
-      <div class="card stack" style="min-width:0"><div class="row between"><h3>Scale model · Year 5</h3><span class="pill p-brass">Assumptions</span></div>
+      <div class="card stack" style="min-width:0"><div class="row between"><h3>Full custodial scheme (phase 2) · Year 5</h3><span class="pill p-brass">Assumptions</span></div>
         <div class="grid4" style="grid-template-columns:repeat(4,minmax(0,1fr))">
           <div><span class="small muted">Deposits held</span><div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700">${Math.round(y5.n).toLocaleString('en-IE')}</div></div>
           <div><span class="small muted">Funds held</span><div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700">${eurM(y5.fup)}</div></div>
@@ -888,14 +890,16 @@ function vOps(){
           <div><span class="small muted">EBITDA</span><div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700;color:${y5.ebitda>=0?'var(--ok)':'var(--bad)'}">${eurM(y5.ebitda)}</div></div>
         </div>
         ${chartSvg(rows)}
-        <div class="tbl-wrap"><table><thead><tr><th>Year</th><th class="r">Deposits</th><th class="r">Funds held</th><th class="r">Interest</th><th class="r">Agent Pro</th><th class="r">Costs</th><th class="r">EBITDA</th></tr></thead><tbody>
-          ${rows.map(r => `<tr><td>Y${r.y}</td><td class="r num">${Math.round(r.n).toLocaleString('en-IE')}</td><td class="r num">${eurM(r.fup)}</td><td class="r num">${eurM(r.interest)}</td><td class="r num">${eurM(r.prem)}</td><td class="r num">${eurM(r.opex)}</td><td class="r num" style="color:${r.ebitda>=0?'var(--ok)':'var(--bad)'}">${eurM(r.ebitda)}</td></tr>`).join('')}
+        <div class="callout"><b>Peak funding need: ${eurM(-peak)}</b>${peakYear ? ` in year ${peakYear}` : ' before launch'}. That is ${eurM(M.setup*1e6)} one-off go-live setup plus operating losses until break-even.</div>
+        <div class="tbl-wrap"><table><thead><tr><th>Year</th><th class="r">Deposits</th><th class="r">Funds held</th><th class="r">Interest</th><th class="r">Agent Pro</th><th class="r">Costs</th><th class="r">EBITDA</th><th class="r">Cumulative cash</th></tr></thead><tbody>
+          ${rows.map(r => `<tr><td>Y${r.y}</td><td class="r num">${Math.round(r.n).toLocaleString('en-IE')}</td><td class="r num">${eurM(r.fup)}</td><td class="r num">${eurM(r.interest)}</td><td class="r num">${eurM(r.prem)}</td><td class="r num">${eurM(r.opex)}</td><td class="r num" style="color:${r.ebitda>=0?'var(--ok)':'var(--bad)'}">${eurM(r.ebitda)}</td><td class="r num" style="color:${r.cum>=0?'var(--ok)':'var(--bad)'}">${eurM(r.cum)}</td></tr>`).join('')}
         </tbody></table></div></div>
       <div class="card stack"><h3>Assumptions</h3>
         ${rng('tenancies','Private tenancies in the market',150000,450000,10000,v=>Number(v).toLocaleString('en-IE'))}
         ${rng('share','Year-5 market share',5,100,1,v=>v+'%')}
         ${rng('avg','Average deposit',900,3000,50,v=>eur(v))}
         ${rng('yieldPct','Net yield on held funds',0.25,4,0.05,v=>Number(v).toFixed(2)+'%')}
+        ${rng('setup','Go-live setup cost (one-off, before Y1)',0.4,2.5,0.05,v=>'€'+Number(v).toFixed(2)+'m')}
         ${rng('founder','Founder salary (+ employer PRSI)',0,150000,5000,v=>eur(v))}
         ${rng('fixed','Other fixed costs (€m / year)',0.8,4,0.01,v=>'€'+Number(v).toFixed(2)+'m')}
         ${rng('perT','Variable cost per deposit',2,25,1,v=>eur(v))}
@@ -1040,7 +1044,7 @@ const ACT = {
   'tour-go': b => { const s = TOUR[+b.dataset.i]; closeModal(); if (s.k === 'protect') wizardInit(); if (s.k === 'check') { checkQ = null; }
     if (s.u) signInAs(s.u, s.go); else { S.session = null; save(); navTo(s.go); } },
   'reset': () => openModal('Reset demo data?', `<p>This restores the original demo deposits and signs you out. Anything you created in this browser is removed.</p><div class="row" style="margin-top:16px"><button class="btn btn-danger" data-act="reset-yes">Reset demo</button><button class="btn btn-g" data-act="close-modal">Cancel</button></div>`),
-  'reset-yes': () => { S = seed(); W = null; M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, perT:9, premium:3, dispute:3, adjCost:220}; save(); closeModal(); toast('Demo reset'); navTo('home'); },
+  'reset-yes': () => { S = seed(); W = null; M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, perT:9, premium:3, dispute:3, adjCost:220}; save(); closeModal(); toast('Demo reset'); navTo('home'); },
   'open': b => navTo('deposit-' + b.dataset.id),
   'cert': b => showCert(dep(b.dataset.id)),
   'resend': b => { const d = dep(b.dataset.id); notify(tenantEmails(d), `Your Deposit Protection Certificate · ${d.dpc}`, d.id); log(d, 'Certificate re-sent to tenants'); save(); toast('Certificate re-sent to ' + d.tenants.length + ' tenant(s)'); },
@@ -1075,7 +1079,7 @@ A94 F3R7,"8 Newtown Ave, Blackrock, Co. Dublin",2026-12-15,2600,2600,Grace Okafo
     const rows = [['D07 P8X2','Apt 4, Smithfield Sq, Dublin 7','2026-12-01',2050,'Aisling Roche','aisling.r@example.com'],['D09 K2T6','22 Iona Road, Glasnevin, Dublin 9','2026-12-01',2300,'Marek Nowak','marek.n@example.com'],['A94 F3R7','8 Newtown Ave, Blackrock, Co. Dublin','2026-12-15',2600,'Grace Okafor','grace.o@example.com']];
     rows.forEach(r => { S.deposits.unshift({id:'d'+Date.now()+Math.floor(Math.random()*1000), dpc:nextDpc(), ownerId:me().id, address:r[1], eircode:r[0], county:'Dublin', rtb:'Pending', start:r[2], end:null, rent:r[3], amount:r[3], tenants:[{name:r[4], email:r[5], uid:null, lead:true}], status:'awaiting_payment', created:nowIso(), timeline:[{at:nowIso(), text:'Imported from CSV. Awaiting deposit funds.'}]}); });
     tick('agent'); save(); closeModal(); toast('3 tenancies imported. Pay them in one payment.'); render(); },
-  'm-reset': () => { M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, perT:9, premium:3, dispute:3, adjCost:220}; render(); }
+  'm-reset': () => { M = {tenancies:300000, share:45, avg:1700, yieldPct:2.0, fixed:1.81, founder:80000, setup:1.4, perT:9, premium:3, dispute:3, adjCost:220}; render(); }
 };
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-act]');
